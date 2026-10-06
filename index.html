@@ -43,7 +43,7 @@ main{flex:1;padding:22px;max-width:1100px;margin:0 auto;width:100%;min-width:0}h
 <main id="m"></main></div></div><div id="toast" class="hide" role="status"></div>
 <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
 <script>
-const API_URL='GANTI_DENGAN_URL_WEB_APP';
+const API_URL='https://script.google.com/macros/s/AKfycbyVzmnhLcOUVAsW8dGzUc4GEsGiI_lyWrg8dlhrloq-a-dwxSBjK4eXBajGrdemtuVF/exec';
 const $=s=>document.querySelector(s),rp=n=>'Rp '+Number(n||0).toLocaleString('id-ID'),ic=(n,t)=>`<i data-lucide="${n}"${t?` title="${t}"`:''}></i>`;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const hp=s=>String(s||'').replace(/^'/,''),today=()=>new Date().toLocaleDateString('sv-SE');
