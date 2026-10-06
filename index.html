@@ -1214,8 +1214,7 @@
             f.ok = () => t === tok;
             return f
         };
-        const tbl = (h, rows) => `<div class="tw"><table><thead><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows?(()=>{let i=0;return rows.replace(/<tr>|<td/g,m=>m==='<tr>'?(i=0,m):`<td data-l="${h[i++]||''}"`)})():` < tr > < td colspan = "${h.length}"
-        class = "empty" > Belum ada data < /td></tr > `}</tbody></table></div>`;
+        const tbl = (h, rows) => !rows ? '<div class="card empty">Belum ada data</div>' : `<div class="tw"><table><thead><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${(()=>{let i=0;return rows.replace(/<tr>|<td/g,m=>m==='<tr>'?(i=0,m):`<td data-l="${h[i++]||''}"`)})()}</tbody></table></div>`;
         const card = (i, l, v, c = '#2563eb') => `<div class="card stat"><div class="ib" style="--c:${c}">${ic(i)}</div><div><small>${l}</small><b>${v}</b></div></div>`;
         const skel = () => '<div class="grid"><div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div></div><div class="skel" style="height:220px"></div>';
         const errCard = e => `<div class="card" style="text-align:center;padding:32px"><div class="ib" style="--c:#dc2626;margin:0 auto 10px">${ic('triangle-alert')}</div><h3>Gagal memuat data</h3><p style="color:var(--mut)">${esc(e.message)}</p><button class="btn" id="rt">${ic('refresh-cw')}Coba lagi</button></div>`;
