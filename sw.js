@@ -1,5 +1,5 @@
 /* LOSMENKU service worker: aplikasi tetap terbuka saat offline. Naikkan versi V saat merilis pembaruan. */
-const V = 'losmenku-v3', CORE = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'];
+const V = 'losmenku-v4', CORE = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'];
 const LUCIDE = 'https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js';
 const store = (r, x) => { if (x.ok || x.type === 'opaque') { const c = x.clone(); caches.open(V).then(h => h.put(r, c)); } return x; };
 self.addEventListener('install', e => e.waitUntil(caches.open(V).then(async c => {
