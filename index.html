@@ -30,7 +30,7 @@
             --hd: #ffffffd9
         }
 
-        [data-t=dark] {
+        [data-theme=dark] {
             --bg: #0b1120;
             --sf: #131c31;
             --tx: #e8ecf7;
@@ -861,7 +861,7 @@
                 const j = await r.json();
                 if (!j.ok) {
                     if (j.error === 'SESSION') {
-                        logout(true);
+                        logout(true, 'Sesi berakhir, silakan login kembali', true);
                         const e = E('Sesi berakhir, silakan login kembali', false);
                         e.session = true;
                         throw e
@@ -1127,7 +1127,16 @@
             const on = !!S;
             $('#login').classList.toggle('hide', on);
             $('#shell').classList.toggle('hide', !on);
-            if (!on) return;
+            if (!on) {
+                try {
+                    const m = sessionStorage.getItem('msg');
+                    if (m) {
+                        $('#le').textContent = m;
+                        sessionStorage.removeItem('msg')
+                    }
+                } catch (e) {}
+                return
+            }
             $('#who').textContent = S.user.nama + ' · ' + S.user.role;
             document.querySelectorAll('.adm').forEach(e => e.classList.toggle('hide', S.user.role !== 'admin'));
             netUI();
@@ -1136,17 +1145,20 @@
             go(view);
             sync()
         }
-
-        function logout(silent) {
-            if (S && !silent) {
-                if (Q.length && !confirm(Q.length + ' data offline belum tersinkron. Data tetap tersimpan dan dikirim saat login berikutnya. Keluar?')) return;
-                net('logout').catch(() => {})
+        async function logout(silent, reason, skip) { // keluar: cabut sesi server, hapus cache & sesi lokal, lalu refresh halaman agar memori/DOM bersih
+            if (S && !silent && Q.length && !confirm(Q.length + ' data offline belum tersinkron. Data tetap tersimpan dan dikirim saat login berikutnya. Keluar?')) return;
+            if (S && !skip && online()) {
+                try {
+                    await Promise.race([net('logout'), new Promise(r => setTimeout(r, 2500))])
+                } catch (e) {}
             }
             S = null;
             C = {};
-            localStorage.removeItem('sess');
-            localStorage.removeItem('cache');
-            show()
+            ['sess', 'cache', 'act'].forEach(k => localStorage.removeItem(k));
+            try {
+                if (reason) sessionStorage.setItem('msg', reason)
+            } catch (e) {}
+            location.reload()
         }
         $('#lf').onsubmit = async e => {
             e.preventDefault();
@@ -1158,6 +1170,9 @@
                     password: $('#p').value
                 });
                 SV('sess', S);
+                try {
+                    localStorage.setItem('act', Date.now())
+                } catch (e) {}
                 $('#p').value = '';
                 show()
             } catch (x) {
@@ -1463,13 +1478,14 @@
                     u = await api('userList');
                 if (!p.ok()) return;
                 p(`<div class="top"><h2>Pengguna</h2><button class="btn" id="add">${ic('plus')}Pengguna</button></div>` +
-                    tbl(['Username', 'Nama', 'Peran', 'Status', 'Aksi'], u.map(x => `<tr><td>${esc(x.username)}</td><td>${esc(x.nama)}</td><td>${esc(x.role)}</td><td>${tag(x.aktif?'Aktif':'Nonaktif')}</td><td class="a">${btn('pencil','Ubah',`data-t="${esc(x.username)}"`,'g')} ${btn('key-round','Reset password',`data-reset="${esc(x.username)}"`,'g')}</td></tr>`).join('')));
+                    tbl(['Username', 'Nama', 'Peran', 'Status', 'Aksi'], u.map(x => `<tr><td>${esc(x.username)}</td><td>${esc(x.nama)}</td><td>${esc(x.role)}</td><td>${tag(x.aktif?'Aktif':'Nonaktif')}</td><td class="a">${btn('pencil','Ubah',`data-ue="${esc(x.username)}"`,'g')} ${btn('key-round','Reset password',`data-reset="${esc(x.username)}"`,'g')}</td></tr>`).join('')));
                 $('#add').onclick = () => modal('Pengguna Baru', inp('username', 'Username (huruf kecil, angka, _ .)', 'text', '', 'pattern="[a-z0-9_.]{3,30}" maxlength="30"') + inp('nama', 'Nama lengkap', 'text', '', 'maxlength="60"') + sel('role', 'Peran', ROLES) + PWF, async o => {
                     await api('userSave', o);
                     V.user()
                 });
-                document.querySelectorAll('[data-t]').forEach(b => {
-                    const x = u.find(y => y.username === b.dataset.t);
+                document.querySelectorAll('[data-ue]').forEach(b => {
+                    const x = u.find(y => y.username === b.dataset.ue);
+                    if (!x) return;
                     b.onclick = () => modal('Ubah ' + x.username, inp('nama', 'Nama', 'text', x.nama, 'maxlength="60"') + sel('role', 'Peran', ROLES, x.role) + sel('aktif', 'Status', [
                         ['true', 'Aktif'],
                         ['false', 'Nonaktif']
@@ -1512,16 +1528,44 @@
             toast('Password diganti')
         });
         const setTh = t => {
-            document.documentElement.dataset.t = t;
+            document.documentElement.dataset.theme = t;
             $('#th').innerHTML = ic(t === 'dark' ? 'sun' : 'moon');
             try {
                 localStorage.setItem('th', t)
             } catch (e) {}
         };
-        $('#th').onclick = () => setTh(document.documentElement.dataset.t === 'dark' ? 'light' : 'dark');
+        $('#th').onclick = () => setTh(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
         try {
             setTh(localStorage.getItem('th') || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light'))
         } catch (e) {}
+        const IDLE = 15 * 60 * 1000;
+        let lastAct = Date.now();
+        const touch = () => {
+            const n = Date.now();
+            if (n - lastAct > 5000) {
+                lastAct = n;
+                try {
+                    localStorage.setItem('act', n)
+                } catch (e) {}
+            }
+        };
+        ['click', 'keydown', 'touchstart', 'scroll', 'mousemove'].forEach(ev => addEventListener(ev, touch, {
+            passive: true
+        }));
+
+        function idleCheck() {
+            if (!S || !online()) return;
+            const a = +localStorage.getItem('act') || lastAct;
+            if (Date.now() - a > IDLE) logout(true, 'Anda keluar otomatis karena tidak aktif selama 15 menit')
+        } // saat offline tidak dikunci agar tetap bisa bekerja
+        setInterval(idleCheck, 30000);
+        idleCheck();
+        addEventListener('storage', e => {
+            if (e.key === 'sess' && !e.newValue && S) {
+                S = null;
+                location.reload()
+            }
+        }); // logout di tab lain
         addEventListener('error', e => {
             if (e.message) toast('Terjadi kesalahan: ' + e.message)
         });
