@@ -1,180 +1,1105 @@
 <!DOCTYPE html>
-<html lang="id"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; worker-src 'self'; connect-src https://script.google.com https://script.googleusercontent.com">
-<meta name="referrer" content="no-referrer"><title>LOSMENKU</title><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#004ac6"><link rel="apple-touch-icon" href="icon-192.png">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root{--p:#004ac6;--pc:#2563eb;--pf:#dbe1ff;--bg:#f7f9fb;--tx:#191c1e;--mut:#434655;--ln:#c3c6d7;--err:#ba1a1a;--ok:#0a7a3d;--warn:#b45309}
-*{box-sizing:border-box}body{margin:0;font:15px/1.5 'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--tx)}
-button,input,select{font:inherit}.hide{display:none!important}svg.lucide{width:18px;height:18px;vertical-align:-4px;flex:none}
-.btn{border:0;border-radius:12px;padding:10px 16px;background:var(--pc);color:#fff;font-weight:600;cursor:pointer;display:inline-flex;gap:6px;align-items:center;justify-content:center}.btn:hover{opacity:.92}.btn:disabled{opacity:.5}
-.btn.s{padding:6px 8px}.btn.s svg{width:16px;height:16px}.btn.g{background:#eceef0;color:var(--tx)}.btn.d{background:var(--err)}.btn.k{background:var(--ok)}
-input,select{width:100%;padding:11px 12px;border:1px solid var(--ln);border-radius:12px;background:#fff}input:focus,select:focus{outline:2px solid var(--pc);border-color:transparent}
-label{display:block;font-size:13px;font-weight:600;color:var(--mut);margin:12px 0 4px}
-#login{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,#004ac6,#2563eb 60%,#00759f)}
-.box{background:#fff;border-radius:20px;padding:26px;width:100%;max-width:400px;box-shadow:0 20px 50px #0003}
-.logo{font-weight:700;font-size:24px;color:var(--p);letter-spacing:-.02em;display:flex;gap:8px;align-items:center}.err{color:var(--err);font-size:13px;min-height:20px;margin-top:8px}
-header{position:sticky;top:0;z-index:9;background:#fff;border-bottom:1px solid #eceef0;padding:10px 16px;display:flex;align-items:center;gap:8px}header .sp{flex:1}header span{color:var(--mut);font-size:13px;font-weight:600}
-#app{display:flex;min-height:calc(100vh - 57px)}nav{width:210px;background:#fff;border-right:1px solid #eceef0;padding:14px;display:flex;flex-direction:column;gap:4px;position:sticky;top:57px;height:calc(100vh - 57px)}
-nav a{padding:10px 12px;border-radius:12px;color:var(--mut);font-weight:600;cursor:pointer;display:flex;gap:10px;align-items:center}nav a.on{background:var(--pf);color:var(--p)}
-main{flex:1;padding:22px;max-width:1100px;margin:0 auto;width:100%;min-width:0}h2{margin:0;font-size:22px;letter-spacing:-.01em}
-.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}.top>div{display:flex;gap:8px;flex-wrap:wrap}.top input,.top select{width:auto;min-width:140px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}.card{background:#fff;border-radius:16px;padding:14px;box-shadow:0 1px 3px #0001}
-.card small{color:var(--mut);font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:.05em;display:flex;gap:6px;align-items:center}.card b{display:block;font-size:24px;margin-top:2px}
-.bar{height:8px;background:#eceef0;border-radius:9px;overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--pc)}
-.tw{overflow-x:auto;background:#fff;border-radius:16px;box-shadow:0 1px 3px #0001}table{width:100%;border-collapse:collapse;min-width:620px}th,td{padding:11px 12px;text-align:left;border-bottom:1px solid #eceef0;font-size:14px}th{color:var(--mut);font-size:11px;text-transform:uppercase}td.a{white-space:nowrap}
-.tag{padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600;background:#eceef0}.Tersedia,.Selesai,.Aktif{background:#d5f5e3;color:var(--ok)}.Terisi,.Check-in{background:var(--pf);color:var(--p)}.Dibersihkan,.Booking{background:#fef3c7;color:var(--warn)}.Perbaikan,.Batal,.Nonaktif{background:#ffdad6;color:var(--err)}
-.rooms{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}.room{border-left:5px solid var(--ln)}.room.Tersedia{border-color:var(--ok)}.room.Terisi{border-color:var(--pc)}.room.Dibersihkan{border-color:#f59e0b}.room.Perbaikan{border-color:var(--err)}.room h3{margin:0;font-size:17px}.room p{margin:2px 0 8px;color:var(--mut);font-size:13px}
-.mask{position:fixed;inset:0;background:#0006;display:grid;place-items:center;padding:14px;z-index:20}.mask .box{max-height:92vh;overflow:auto}
-.rc{font:12px/1.4 ui-monospace,Menlo,monospace;background:#fafafa;border:1px dashed var(--ln);padding:12px;white-space:pre-wrap;width:240px;margin:8px auto}
-#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#2d3133;color:#fff;padding:12px 18px;border-radius:12px;z-index:30;max-width:90vw}
-#rcp{display:none}@page{size:58mm auto;margin:2mm}
-@media print{body>*:not(#rcp){display:none!important}#rcp{display:block;font:11px/1.3 monospace;width:54mm;white-space:pre-wrap;color:#000}}
-@media(max-width:760px){#app{display:block;padding-bottom:70px}nav{position:fixed;bottom:0;left:0;right:0;top:auto;width:auto;height:auto;flex-direction:row;justify-content:space-around;padding:4px 2px calc(4px + env(safe-area-inset-bottom));z-index:10;border:0;box-shadow:0 -2px 10px #0002;overflow-x:auto}nav a{flex-direction:column;gap:0;padding:6px 8px;font-size:11px;white-space:nowrap}main{padding:14px}header span{display:none}}
-</style></head><body>
-<section id="login"><form class="box" id="lf" autocomplete="on"><div class="logo"><i data-lucide="building-2"></i>LOSMENKU</div><p style="color:var(--mut);margin:4px 0 8px">Masuk untuk mengelola properti Anda</p>
-<label for="u">Username</label><input id="u" autocomplete="username" required maxlength="40">
-<label for="p">Password</label><input id="p" type="password" autocomplete="current-password" required maxlength="100">
-<div class="err" id="le" role="alert"></div><button class="btn" style="width:100%" id="lb"><i data-lucide="log-in"></i>Masuk</button></form></section>
-<div id="shell" class="hide"><header><div class="logo"><i data-lucide="building-2"></i><b id="pn">LOSMENKU</b></div><div class="sp"></div><button class="btn g s hide" id="sy"></button><span id="who"></span><button class="btn g s" id="pw" title="Ganti password"><i data-lucide="key-round"></i></button><button class="btn g s" id="out" title="Keluar"><i data-lucide="log-out"></i></button></header>
-<div id="app"><nav>
-<a data-v="dash" class="on"><i data-lucide="layout-dashboard"></i>Beranda</a><a data-v="kamar"><i data-lucide="bed-double"></i>Kamar</a><a data-v="res"><i data-lucide="calendar-check"></i>Reservasi</a><a data-v="lap"><i data-lucide="trending-up"></i>Laporan</a><a data-v="user" class="adm"><i data-lucide="users"></i>Pengguna</a><a data-v="set" class="adm"><i data-lucide="settings"></i>Pengaturan</a></nav>
-<main id="m"></main></div></div><div id="toast" class="hide" role="status"></div>
-<script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
-<script>
-const API_URL='https://script.google.com/macros/s/AKfycbyVzmnhLcOUVAsW8dGzUc4GEsGiI_lyWrg8dlhrloq-a-dwxSBjK4eXBajGrdemtuVF/exec';
-const $=s=>document.querySelector(s),rp=n=>'Rp '+Number(n||0).toLocaleString('id-ID'),ic=(n,t)=>`<i data-lucide="${n}"${t?` title="${t}"`:''}></i>`;
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const hp=s=>String(s||'').replace(/^'/,''),today=()=>new Date().toLocaleDateString('sv-SE');
-let S=null,view='dash',CFG={nama:'LOSMENKU'},RES=[];
-const LS=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}},SV=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
-S=LS('sess',null);let Q=LS('queue',[]),C=LS('cache',{});const saveQ=()=>SV('queue',Q),saveC=()=>SV('cache',C);
-let raf;new MutationObserver(()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>window.lucide&&lucide.createIcons())}).observe(document.body,{childList:true,subtree:true});
-function toast(t){const e=$('#toast');e.textContent=t;e.classList.remove('hide');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.add('hide'),3500)}
-const E=(m,net)=>{const e=new Error(m);e.net=net;return e};
-async function net(action,data){
-  if(!API_URL.startsWith('https://'))throw E('API_URL belum diatur di index.html',false);
-  const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),25000);
-  try{
-    const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,data,token:S&&S.token}),signal:ctl.signal});
-    const j=await r.json();
-    if(!j.ok){if(j.error==='SESSION'){logout(true);const e=E('Sesi berakhir, silakan login kembali',false);e.session=true;throw e}throw E(j.error,false)}
-    return j.data;
-  }catch(e){if(e.net===false)throw e;throw E(e.name==='AbortError'?'Koneksi timeout, coba lagi':'Tidak dapat terhubung ke server',true)}finally{clearTimeout(t)}
-}
-/* ---- offline: cache baca, antrean tulis, sinkron otomatis ---- */
-const WQ=new Set(['roomStatus','roomSave','roomDelete','resSave','pay','resAction']),RC=['roomList','resList','settingsGet'];
-const online=()=>navigator.onLine;
-function netUI(){const b=$('#sy');if(!b)return;const off=!online(),n=Q.length;b.classList.toggle('hide',!off&&!n);
-  b.innerHTML=(off?ic('wifi-off')+'Offline':ic('refresh-cw')+'Sinkron')+(n?' · '+n:'');b.title=n?n+' data menunggu sinkronisasi':'Mode offline'}
-function dashLocal(){const k=C.roomList||[],r=C.resList||[],t=today(),cnt=s=>k.filter(x=>x.status===s).length,sum=(l,f)=>l.reduce((a,x)=>a+f(x),0);
-  return{total:k.length,tersedia:cnt('Tersedia'),terisi:cnt('Terisi'),dibersihkan:cnt('Dibersihkan'),perbaikan:cnt('Perbaikan'),checkinHariIni:r.filter(x=>x.checkin===t&&x.status==='Booking').length,checkoutHariIni:r.filter(x=>x.checkout===t&&x.status==='Check-in').length,
-  okupansi:k.length?Math.round(cnt('Terisi')/k.length*100):0,pendapatan:sum(r.filter(x=>x.status!=='Batal'),x=>+x.dibayar||0),piutang:sum(r.filter(x=>['Booking','Check-in','Selesai'].includes(x.status)),x=>Math.max(0,x.total-(+x.dibayar||0)))}}
-function local(a,d){ // terapkan perubahan ke cache lokal + validasi dasar
-  const rooms=C.roomList=C.roomList||[],res=C.resList=C.resList||[],room=id=>rooms.find(x=>x.id===id),R=id=>res.find(x=>x.id===id),bad=m=>{throw E(m,false)};
-  if(a==='roomStatus')(room(d.id)||bad('Kamar tidak ditemukan')).status=d.status;
-  if(a==='roomSave'){const id=String(d.id).trim().toUpperCase(),k=room(id),o={id,nama:d.nama,tipe:d.tipe,harga:+d.harga,status:k?k.status:'Tersedia'};k?Object.assign(k,o):rooms.push(o)}
-  if(a==='roomDelete'){if(res.some(x=>x.kamar===d.id&&['Booking','Check-in'].includes(x.status)))bad('Kamar masih memiliki reservasi aktif');C.roomList=rooms.filter(x=>x.id!==d.id)}
-  if(a==='resSave'){const k=room(d.kamar)||bad('Kamar tidak ditemukan');if(String(d.tamu).trim().length<2)bad('Data tamu tidak valid');if(!d.checkin||!d.checkout||d.checkout<=d.checkin)bad('Tanggal check-out harus setelah check-in');
-    if(res.some(x=>x.kamar===k.id&&['Booking','Check-in'].includes(x.status)&&x.checkin<d.checkout&&x.checkout>d.checkin))bad('Reservasi bentrok: kamar sudah dipesan pada tanggal tersebut');
-    res.unshift({id:d.id,tamu:d.tamu,hp:d.hp,kamar:k.id,checkin:d.checkin,checkout:d.checkout,total:Math.round((new Date(d.checkout)-new Date(d.checkin))/864e5)*k.harga,status:'Booking',oleh:S.user.username,dibayar:0,metode:''})}
-  if(a==='pay'){const r=R(d.id)||bad('Reservasi tidak ditemukan'),j=+d.jumlah;if(r.status==='Batal'||!(j>0)||j>r.total-r.dibayar)bad('Jumlah pembayaran tidak valid');r.dibayar=+r.dibayar+j;r.metode=d.metode}
-  if(a==='resAction'){const r=R(d.id)||bad('Reservasi tidak ditemukan'),m={checkin:['Booking','Check-in','Terisi'],checkout:['Check-in','Selesai','Dibersihkan'],batal:['Booking','Batal',null]}[d.type];
-    if(!m||r.status!==m[0])bad('Status reservasi tidak sesuai untuk aksi ini');if(d.type==='checkout'&&+r.dibayar<+r.total)bad('Pelunasan belum selesai. Catat pembayaran sebelum check-out');r.status=m[1];if(m[2]&&room(r.kamar))room(r.kamar).status=m[2]}
-  saveC()}
-async function prefetch(){if(!online()||Q.length||!S)return;try{for(const a of RC)C[a]=await net(a);saveC();CFG=C.settingsGet||CFG;$('#pn').textContent=CFG.nama}catch(e){}}
-let syncing=false;
-async function sync(){
-  if(syncing||!Q.length||!online()||!S)return;syncing=true;netUI();let n=0,stop=false;
-  try{while(Q.length&&!stop){const o=Q[0];
-    try{await net(o.a,{...o.d,opId:o.id})}catch(e){if(e.net||e.session){stop=true;break}toast('Sinkron ditolak ('+o.a+'): '+e.message)}
-    Q.shift();saveQ();n++;netUI()}}
-  finally{syncing=false;netUI()}
-  if(n&&!Q.length){await prefetch();toast(n+' data offline berhasil disinkronkan');if(S&&!document.querySelector('.mask'))go(view)}}
-async function api(a,d={}){
-  if(WQ.has(a)){
-    d={...d,opId:crypto.randomUUID()};if(a==='resSave'&&!d.id)d.id='R'+new Date().toLocaleString('sv-SE').replace(/\D/g,'').slice(2)+Math.random().toString(36).slice(2,5).toUpperCase();
-    if(!Q.length&&online()){try{return await net(a,d)}catch(e){if(!e.net)throw e}}
-    local(a,d);const{opId,...rest}=d;Q.push({id:opId,a,d:rest});saveQ();netUI();toast('Disimpan offline, otomatis dikirim saat online');sync();return 'queued'}
-  if(RC.includes(a)||a==='dashboard'){
-    if(Q.length)await sync();
-    if(!Q.length&&online()){try{const r=await net(a,d);if(RC.includes(a)){C[a]=r;saveC()}return r}catch(e){if(!e.net)throw e}}
-    if(a==='dashboard'&&C.roomList)return dashLocal();
-    if(C[a])return JSON.parse(JSON.stringify(C[a]));
-    throw E('Data belum tersedia offline. Hubungkan ke internet terlebih dahulu',true)}
-  if(!online()&&a!=='logout')throw E('Fitur ini membutuhkan koneksi internet',true);
-  return net(a,d)}
-addEventListener('online',()=>{netUI();sync()});addEventListener('offline',netUI);setInterval(sync,30000);
-if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
-const run=async(f,ok)=>{try{await f();if(ok)toast(ok)}catch(e){toast(e.message)}};
-async function show(){const on=!!S;$('#login').classList.toggle('hide',on);$('#shell').classList.toggle('hide',!on);
-  if(!on)return;$('#who').textContent=S.user.nama+' · '+S.user.role;
-  document.querySelectorAll('.adm').forEach(e=>e.classList.toggle('hide',S.user.role!=='admin'));
-  netUI();CFG=C.settingsGet||CFG;$('#pn').textContent=CFG.nama;go(view);await sync();await prefetch()}
-function logout(silent){if(S&&!silent){if(Q.length&&!confirm(Q.length+' data offline belum tersinkron. Data tetap tersimpan dan dikirim saat login berikutnya. Keluar?'))return;net('logout').catch(()=>{})}S=null;C={};localStorage.removeItem('sess');localStorage.removeItem('cache');show()}
-$('#lf').onsubmit=async e=>{e.preventDefault();$('#le').textContent='';$('#lb').disabled=true;
-  try{S=await api('login',{username:$('#u').value,password:$('#p').value});SV('sess',S);$('#p').value='';show()}
-  catch(x){$('#le').textContent=x.message}$('#lb').disabled=false};
-$('#out').onclick=()=>logout();
-document.querySelectorAll('nav [data-v]').forEach(a=>a.onclick=()=>go(a.dataset.v));
-function go(v){view=v;document.querySelectorAll('nav [data-v]').forEach(a=>a.classList.toggle('on',a.dataset.v===v));$('#m').innerHTML='<p>Memuat…</p>';run(()=>V[v]())}
-function modal(title,body,onOk,okLabel='Simpan'){const d=document.createElement('div');d.className='mask';
-  d.innerHTML=`<form class="box"><h2 style="margin-bottom:8px">${esc(title)}</h2>${body}<div class="err"></div><div style="display:flex;gap:8px;margin-top:12px">${onOk?`<button class="btn" style="flex:1">${okLabel}</button>`:''}<button type="button" class="btn g" style="flex:1">${onOk?'Batal':'Tutup'}</button></div></form>`;
-  document.body.append(d);const f=d.firstChild,x=()=>d.remove();f.querySelector('.g').onclick=x;
-  f.onsubmit=async e=>{e.preventDefault();if(!onOk)return;const o=Object.fromEntries(new FormData(f)),b=f.querySelector('.btn');b.disabled=true;try{await onOk(o);x()}catch(er){f.querySelector('.err').textContent=er.message;b.disabled=false}};return f}
-const inp=(n,l,t='text',v='',x='')=>`<label>${l}</label><input name="${n}" type="${t}" value="${esc(v)}" required ${x}>`;
-const sel=(n,l,o,v)=>`<label>${l}</label><select name="${n}">${o.map(([a,b])=>`<option value="${esc(a)}" ${String(a)===String(v)?'selected':''}>${esc(b)}</option>`).join('')}</select>`;
-const tbl=(h,rows)=>`<div class="tw"><table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${rows||`<tr><td colspan="${h.length}">Belum ada data</td></tr>`}</table></div>`;
-const tag=(s,l)=>`<span class="tag ${esc(s)}">${esc(l||s)}</span>`,btn=(i,t,at,c='')=>`<button class="btn s ${c}" title="${t}" ${at}>${ic(i)}</button>`;
-const card=(i,l,v,x='')=>`<div class="card"><small>${ic(i)}${l}</small><b>${v}</b>${x}</div>`;
-/* ---- struk ---- */
-function struk(r){const L=(a,b)=>a.padEnd(14)+String(b),w=32,c=s=>' '.repeat(Math.max(0,(w-s.length)>>1))+s,m=Math.round((new Date(r.checkout)-new Date(r.checkin))/864e5);
-  return [c(CFG.nama),c(CFG.alamat),c('Telp '+CFG.telp),'-'.repeat(w),'KWITANSI '+r.id,'-'.repeat(w),L('Tamu',r.tamu),L('Kamar',r.kamar),L('Check-in',r.checkin),L('Check-out',r.checkout),L('Malam',m),'-'.repeat(w),L('Total',rp(r.total)),L('Dibayar',rp(r.dibayar)),L('Sisa',rp(r.total-r.dibayar)),L('Metode',r.metode||'-'),L('Status',r.total-r.dibayar<=0?'LUNAS':'BELUM LUNAS'),'-'.repeat(w),c(CFG.footer)].join('\n')}
-function kwitansi(r){const t=struk(r),f=modal('Kwitansi',`<div class="rc">${esc(t)}</div>`);
-  f.querySelector('.err').insertAdjacentHTML('afterend',`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button type="button" class="btn k" id="wa" style="flex:1">${ic('message-circle')}WhatsApp</button><button type="button" class="btn" id="pr" style="flex:1">${ic('printer')}Cetak 58mm</button></div>`);
-  f.querySelector('#wa').onclick=()=>{let n=hp(r.hp).replace(/\D/g,'');if(n.startsWith('0'))n='62'+n.slice(1);window.open('https://wa.me/'+n+'?text='+encodeURIComponent(t),'_blank','noopener')};
-  f.querySelector('#pr').onclick=()=>{const d=document.createElement('div');d.id='rcp';d.textContent=t;document.body.append(d);window.print();d.remove()}}
-/* ---- views ---- */
-const V={
-async dash(){const[d,r]=await Promise.all([api('dashboard'),api('resList')]),t=today();
-  const row=(x,a)=>`<tr><td><b>${esc(x.tamu)}</b></td><td>${esc(x.kamar)}</td><td>${esc(x.checkin)} → ${esc(x.checkout)}</td><td>${tag(x.status)}</td></tr>`;
-  $('#m').innerHTML=`<div class="top"><h2>Halo, ${esc(S.user.nama)}</h2></div><div class="grid">${card('building','Total Kamar',d.total)+card('door-open','Tersedia',d.tersedia)+card('bed-double','Terisi',d.terisi,`<div class="bar"><i style="width:${d.okupansi}%"></i></div>`)+card('sparkles','Dibersihkan',d.dibersihkan)+card('wrench','Perbaikan',d.perbaikan)+card('log-in','Check-in Hari Ini',d.checkinHariIni)+card('log-out','Check-out Hari Ini',d.checkoutHariIni)+card('wallet','Pendapatan',rp(d.pendapatan))+card('clock','Piutang',rp(d.piutang))}</div>
-  <h3>Agenda Hari Ini</h3>${tbl(['Tamu','Kamar','Tanggal','Status'],r.filter(x=>(x.checkin===t&&x.status==='Booking')||(x.checkout===t&&x.status==='Check-in')).map(row).join(''))}`},
-async kamar(){const k=await api('roomList'),adm=S.user.role==='admin',st=['Tersedia','Terisi','Dibersihkan','Perbaikan'],edit=r=>modal(r?'Ubah Kamar':'Tambah Kamar',inp('id','Kode (mis. K301)','text',r?.id,r?'readonly':'')+inp('nama','Nama','text',r?.nama)+inp('tipe','Tipe','text',r?.tipe)+inp('harga','Harga per malam','number',r?.harga,'min="1"'),async o=>{await api('roomSave',o);V.kamar()});
-  $('#m').innerHTML=`<div class="top"><h2>Status Kamar</h2>${adm?`<button class="btn" id="add">${ic('plus')}Kamar</button>`:''}</div><div class="rooms">${k.map(r=>`<div class="card room ${esc(r.status)}"><h3>${esc(r.nama)}</h3><p>${esc(r.tipe)} · ${rp(r.harga)}/malam</p><select data-id="${esc(r.id)}">${st.map(s=>`<option ${s===r.status?'selected':''}>${s}</option>`).join('')}</select>${adm?`<div style="margin-top:8px;display:flex;gap:6px">${btn('pencil','Ubah',`data-e="${esc(r.id)}"`,'g')}${btn('trash-2','Hapus',`data-x="${esc(r.id)}"`,'d')}</div>`:''}</div>`).join('')||'<p>Belum ada kamar</p>'}</div>`;
-  document.querySelectorAll('#m select').forEach(s=>s.onchange=()=>run(async()=>{await api('roomStatus',{id:s.dataset.id,status:s.value});V.kamar()},'Status diperbarui'));
-  if(adm){$('#add').onclick=()=>edit();document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>edit(k.find(x=>x.id===b.dataset.e)));
-    document.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{if(confirm('Hapus kamar '+b.dataset.x+'?'))run(async()=>{await api('roomDelete',{id:b.dataset.x});V.kamar()},'Kamar dihapus')})}},
-async res(){const[r,k]=await Promise.all([api('resList'),api('roomList')]);RES=r;
-  $('#m').innerHTML=`<div class="top"><h2>Reservasi</h2><div><input id="q" placeholder="Cari tamu / kamar…" type="search"><select id="fs"><option value="">Semua status</option>${['Booking','Check-in','Selesai','Batal'].map(s=>`<option>${s}</option>`).join('')}</select><button class="btn" id="add">${ic('plus')}Reservasi</button></div></div><div id="rl"></div>`;
-  const draw=()=>{const q=$('#q').value.toLowerCase(),f=$('#fs').value,l=RES.filter(x=>(!f||x.status===f)&&(x.tamu+x.kamar+x.id).toLowerCase().includes(q));
-    $('#rl').innerHTML=tbl(['Tamu','Kamar','Tanggal','Total / Dibayar','Status','Aksi'],l.map(x=>{const sisa=x.total-x.dibayar,B=x.status==='Booking',C=x.status==='Check-in';return`<tr><td><b>${esc(x.tamu)}</b><br><small>${esc(hp(x.hp))}</small></td><td>${esc(x.kamar)}</td><td>${esc(x.checkin)} → ${esc(x.checkout)}</td><td>${rp(x.total)}<br><small>${sisa<=0?'Lunas':'Dibayar '+rp(x.dibayar)}</small></td><td>${tag(x.status)}</td><td class="a">${(B||C)&&sisa>0?btn('wallet','Catat pembayaran',`data-a="pay" data-id="${esc(x.id)}"`,'k'):''} ${B?btn('log-in','Check-in',`data-a="checkin" data-id="${esc(x.id)}"`):''}${C?btn('log-out','Check-out',`data-a="checkout" data-id="${esc(x.id)}"`):''} ${x.status!=='Batal'?btn('receipt','Kwitansi',`data-a="rc" data-id="${esc(x.id)}"`,'g'):''} ${B?btn('ban','Batalkan',`data-a="batal" data-id="${esc(x.id)}"`,'d'):''}</td></tr>`}).join(''))};
-  $('#rl').onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;const x=RES.find(y=>y.id===b.dataset.id),a=b.dataset.a;
-    if(a==='rc')return kwitansi(x);
-    if(a==='pay')return modal('Catat Pembayaran',`<p>${esc(x.tamu)} · sisa <b>${rp(x.total-x.dibayar)}</b></p>`+inp('jumlah','Jumlah (Rp)','number',x.total-x.dibayar,`min="1" max="${x.total-x.dibayar}"`)+sel('metode','Metode',['Tunai','Transfer','QRIS'].map(m=>[m,m])),async o=>{await api('pay',{id:x.id,...o});V.res()});
-    if(a==='batal'&&!confirm('Batalkan reservasi ini?'))return;run(async()=>{await api('resAction',{id:x.id,type:a});V.res()},'Berhasil')};
-  $('#q').oninput=draw;$('#fs').onchange=draw;draw();
-  $('#add').onclick=()=>modal('Reservasi Baru',inp('tamu','Nama tamu','text','','maxlength="60"')+inp('hp','No. HP / WhatsApp','tel','','maxlength="20"')+sel('kamar','Kamar',k.map(x=>[x.id,`${x.nama} - ${rp(x.harga)}`]))+inp('checkin','Check-in','date',today())+inp('checkout','Check-out','date'),async o=>{await api('resSave',o);V.res()})},
-async lap(){const r=await api('resList'),mo=today().slice(0,7);
-  $('#m').innerHTML=`<div class="top"><h2>Laporan</h2><div><input type="month" id="mo" value="${mo}"><button class="btn g" id="csv">${ic('download')}CSV</button></div></div><div id="lr"></div>`;
-  let l=[];const draw=()=>{l=r.filter(x=>x.checkin.startsWith($('#mo').value)&&x.status!=='Batal');const T=l.reduce((a,x)=>a+Number(x.total),0),P=l.reduce((a,x)=>a+Number(x.dibayar),0);
-    $('#lr').innerHTML=`<div class="grid">${card('calendar-check','Reservasi',l.length)+card('receipt','Total Tagihan',rp(T))+card('wallet','Diterima',rp(P))+card('clock','Piutang',rp(T-P))}</div>`+tbl(['ID','Tamu','Kamar','Check-in','Total','Dibayar','Status'],l.map(x=>`<tr><td>${esc(x.id)}</td><td>${esc(x.tamu)}</td><td>${esc(x.kamar)}</td><td>${esc(x.checkin)}</td><td>${rp(x.total)}</td><td>${rp(x.dibayar)}</td><td>${tag(x.status)}</td></tr>`).join(''))};
-  $('#mo').onchange=draw;draw();
-  $('#csv').onclick=()=>{const q=v=>'"'+String(/^[=+\-@]/.test(v)?"'"+v:v).replace(/"/g,'""')+'"',rows=[['ID','Tamu','HP','Kamar','Check-in','Check-out','Total','Dibayar','Metode','Status'],...l.map(x=>[x.id,x.tamu,hp(x.hp),x.kamar,x.checkin,x.checkout,x.total,x.dibayar,x.metode,x.status])];
-    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+rows.map(z=>z.map(q).join(',')).join('\n')],{type:'text/csv'}));a.download='laporan-'+$('#mo').value+'.csv';a.click();URL.revokeObjectURL(a.href)}},
-async user(){const u=await api('userList');
-  const pwf=inp('password','Password (min. 8, huruf & angka)','password','','minlength="8" autocomplete="new-password"'),roles=[['staff','Staf'],['admin','Admin']];
-  $('#m').innerHTML=`<div class="top"><h2>Pengguna</h2><button class="btn" id="add">${ic('plus')}Pengguna</button></div>`+
-  tbl(['Username','Nama','Peran','Status','Aksi'],u.map(x=>`<tr><td>${esc(x.username)}</td><td>${esc(x.nama)}</td><td>${esc(x.role)}</td><td>${tag(x.aktif?'Aktif':'Nonaktif')}</td><td class="a">${btn('pencil','Ubah',`data-t="${esc(x.username)}"`,'g')} ${btn('key-round','Reset password',`data-reset="${esc(x.username)}"`,'g')}</td></tr>`).join(''));
-  $('#add').onclick=()=>modal('Pengguna Baru',inp('username','Username')+inp('nama','Nama lengkap')+sel('role','Peran',roles)+pwf,async o=>{await api('userSave',o);V.user()});
-  document.querySelectorAll('[data-t]').forEach(b=>{const x=u.find(y=>y.username===b.dataset.t);b.onclick=()=>modal('Ubah '+x.username,inp('nama','Nama','text',x.nama)+sel('role','Peran',roles,x.role)+sel('aktif','Status',[['true','Aktif'],['false','Nonaktif']],String(x.aktif)),async o=>{await api('userSave',{username:x.username,nama:o.nama,role:o.role,aktif:o.aktif==='true'});V.user()})});
-  document.querySelectorAll('[data-reset]').forEach(b=>b.onclick=()=>modal('Reset password '+b.dataset.reset,inp('password','Password baru','password','','minlength="8" autocomplete="new-password"'),async o=>{await api('userReset',{username:b.dataset.reset,password:o.password});toast('Password direset')}))},
-async set(){const[c,l]=await Promise.all([api('settingsGet'),api('logList')]);
-  $('#m').innerHTML=`<div class="top"><h2>Pengaturan</h2></div><form class="card" id="sf" style="max-width:480px;margin-bottom:18px"><b style="font-size:16px">Identitas Properti (tampil di kwitansi)</b>${inp('nama','Nama','text',c.nama)+inp('alamat','Alamat','text',c.alamat)+inp('telp','Telepon','text',c.telp)+inp('footer','Catatan kaki','text',c.footer)}<button class="btn" style="margin-top:12px">${ic('save')}Simpan</button></form>
-  <h3>Log Aktivitas</h3>`+tbl(['Waktu','Pengguna','Aksi','Detail'],l.map(x=>`<tr><td>${esc(String(x.waktu).replace('T',' ').slice(0,16))}</td><td>${esc(x.user)}</td><td>${esc(x.aksi)}</td><td>${esc(x.detail)}</td></tr>`).join(''));
-  $('#sf').onsubmit=e=>{e.preventDefault();run(async()=>{await api('settingsSave',Object.fromEntries(new FormData(e.target)));CFG=await api('settingsGet');$('#pn').textContent=CFG.nama},'Pengaturan disimpan')}}
-};
-$('#pw').onclick=()=>modal('Ganti Password',inp('lama','Password lama','password','','autocomplete="current-password"')+inp('baru','Password baru (min. 8, huruf & angka)','password','','minlength="8" autocomplete="new-password"'),async o=>{await api('changePassword',o);toast('Password diganti')});
-show();
-</script></body></html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; worker-src 'self'; connect-src https://script.google.com https://script.googleusercontent.com">
+    <meta name="referrer" content="no-referrer">
+    <title>LOSMENKU</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#004ac6">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --p: #004ac6;
+            --pc: #2563eb;
+            --pf: #dbe1ff;
+            --bg: #f7f9fb;
+            --tx: #191c1e;
+            --mut: #434655;
+            --ln: #c3c6d7;
+            --err: #ba1a1a;
+            --ok: #0a7a3d;
+            --warn: #b45309
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font: 15px/1.5 'Plus Jakarta Sans', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--tx)
+        }
+
+        button,
+        input,
+        select {
+            font: inherit
+        }
+
+        .hide {
+            display: none !important
+        }
+
+        svg.lucide {
+            width: 18px;
+            height: 18px;
+            vertical-align: -4px;
+            flex: none
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 12px;
+            padding: 10px 16px;
+            background: var(--pc);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            gap: 6px;
+            align-items: center;
+            justify-content: center
+        }
+
+        .btn:hover {
+            opacity: .92
+        }
+
+        .btn:disabled {
+            opacity: .5
+        }
+
+        .btn.s {
+            padding: 6px 8px
+        }
+
+        .btn.s svg {
+            width: 16px;
+            height: 16px
+        }
+
+        .btn.g {
+            background: #eceef0;
+            color: var(--tx)
+        }
+
+        .btn.d {
+            background: var(--err)
+        }
+
+        .btn.k {
+            background: var(--ok)
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid var(--ln);
+            border-radius: 12px;
+            background: #fff
+        }
+
+        input:focus,
+        select:focus {
+            outline: 2px solid var(--pc);
+            border-color: transparent
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--mut);
+            margin: 12px 0 4px
+        }
+
+        #login {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #004ac6, #2563eb 60%, #00759f)
+        }
+
+        .box {
+            background: #fff;
+            border-radius: 20px;
+            padding: 26px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 50px #0003
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 24px;
+            color: var(--p);
+            letter-spacing: -.02em;
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .err {
+            color: var(--err);
+            font-size: 13px;
+            min-height: 20px;
+            margin-top: 8px
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 9;
+            background: #fff;
+            border-bottom: 1px solid #eceef0;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        header .sp {
+            flex: 1
+        }
+
+        header span {
+            color: var(--mut);
+            font-size: 13px;
+            font-weight: 600
+        }
+
+        #app {
+            display: flex;
+            min-height: calc(100vh - 57px)
+        }
+
+        nav {
+            width: 210px;
+            background: #fff;
+            border-right: 1px solid #eceef0;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            position: sticky;
+            top: 57px;
+            height: calc(100vh - 57px)
+        }
+
+        nav a {
+            padding: 10px 12px;
+            border-radius: 12px;
+            color: var(--mut);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            gap: 10px;
+            align-items: center
+        }
+
+        nav a.on {
+            background: var(--pf);
+            color: var(--p)
+        }
+
+        main {
+            flex: 1;
+            padding: 22px;
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+            min-width: 0
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 22px;
+            letter-spacing: -.01em
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px
+        }
+
+        .top>div {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .top input,
+        .top select {
+            width: auto;
+            min-width: 140px
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 14px;
+            box-shadow: 0 1px 3px #0001
+        }
+
+        .card small {
+            color: var(--mut);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: .05em;
+            display: flex;
+            gap: 6px;
+            align-items: center
+        }
+
+        .card b {
+            display: block;
+            font-size: 24px;
+            margin-top: 2px
+        }
+
+        .bar {
+            height: 8px;
+            background: #eceef0;
+            border-radius: 9px;
+            overflow: hidden;
+            margin-top: 6px
+        }
+
+        .bar i {
+            display: block;
+            height: 100%;
+            background: var(--pc)
+        }
+
+        .tw {
+            overflow-x: auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px #0001
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 620px
+        }
+
+        th,
+        td {
+            padding: 11px 12px;
+            text-align: left;
+            border-bottom: 1px solid #eceef0;
+            font-size: 14px
+        }
+
+        th {
+            color: var(--mut);
+            font-size: 11px;
+            text-transform: uppercase
+        }
+
+        td.a {
+            white-space: nowrap
+        }
+
+        .tag {
+            padding: 3px 10px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #eceef0
+        }
+
+        .Tersedia,
+        .Selesai,
+        .Aktif {
+            background: #d5f5e3;
+            color: var(--ok)
+        }
+
+        .Terisi,
+        .Check-in {
+            background: var(--pf);
+            color: var(--p)
+        }
+
+        .Dibersihkan,
+        .Booking {
+            background: #fef3c7;
+            color: var(--warn)
+        }
+
+        .Perbaikan,
+        .Batal,
+        .Nonaktif {
+            background: #ffdad6;
+            color: var(--err)
+        }
+
+        .rooms {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 12px
+        }
+
+        .room {
+            border-left: 5px solid var(--ln)
+        }
+
+        .room.Tersedia {
+            border-color: var(--ok)
+        }
+
+        .room.Terisi {
+            border-color: var(--pc)
+        }
+
+        .room.Dibersihkan {
+            border-color: #f59e0b
+        }
+
+        .room.Perbaikan {
+            border-color: var(--err)
+        }
+
+        .room h3 {
+            margin: 0;
+            font-size: 17px
+        }
+
+        .room p {
+            margin: 2px 0 8px;
+            color: var(--mut);
+            font-size: 13px
+        }
+
+        .mask {
+            position: fixed;
+            inset: 0;
+            background: #0006;
+            display: grid;
+            place-items: center;
+            padding: 14px;
+            z-index: 20
+        }
+
+        .mask .box {
+            max-height: 92vh;
+            overflow: auto
+        }
+
+        .rc {
+            font: 12px/1.4 ui-monospace, Menlo, monospace;
+            background: #fafafa;
+            border: 1px dashed var(--ln);
+            padding: 12px;
+            white-space: pre-wrap;
+            width: 240px;
+            margin: 8px auto
+        }
+
+        #toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3133;
+            color: #fff;
+            padding: 12px 18px;
+            border-radius: 12px;
+            z-index: 30;
+            max-width: 90vw
+        }
+
+        #rcp {
+            display: none
+        }
+
+        @page {
+            size: 58mm auto;
+            margin: 2mm
+        }
+
+        @media print {
+            body>*:not(#rcp) {
+                display: none !important
+            }
+
+            #rcp {
+                display: block;
+                font: 11px/1.3 monospace;
+                width: 54mm;
+                white-space: pre-wrap;
+                color: #000
+            }
+        }
+
+        @media(max-width:760px) {
+            #app {
+                display: block;
+                padding-bottom: 70px
+            }
+
+            nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                top: auto;
+                width: auto;
+                height: auto;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 4px 2px calc(4px + env(safe-area-inset-bottom));
+                z-index: 10;
+                border: 0;
+                box-shadow: 0 -2px 10px #0002;
+                overflow-x: auto
+            }
+
+            nav a {
+                flex-direction: column;
+                gap: 0;
+                padding: 6px 8px;
+                font-size: 11px;
+                white-space: nowrap
+            }
+
+            main {
+                padding: 14px
+            }
+
+            header span {
+                display: none
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <section id="login">
+        <form class="box" id="lf" autocomplete="on">
+            <div class="logo"><i data-lucide="building-2"></i>LOSMENKU</div>
+            <p style="color:var(--mut);margin:4px 0 8px">Masuk untuk mengelola properti Anda</p>
+            <label for="u">Username</label><input id="u" autocomplete="username" required maxlength="40">
+            <label for="p">Password</label><input id="p" type="password" autocomplete="current-password" required maxlength="100">
+            <div class="err" id="le" role="alert"></div><button class="btn" style="width:100%" id="lb"><i data-lucide="log-in"></i>Masuk</button>
+        </form>
+    </section>
+    <div id="shell" class="hide">
+        <header>
+            <div class="logo"><i data-lucide="building-2"></i><b id="pn">LOSMENKU</b></div>
+            <div class="sp"></div><button class="btn g s hide" id="sy"></button><span id="who"></span><button class="btn g s" id="pw" title="Ganti password"><i data-lucide="key-round"></i></button><button class="btn g s" id="out" title="Keluar"><i data-lucide="log-out"></i></button>
+        </header>
+        <div id="app">
+            <nav>
+                <a data-v="dash" class="on"><i data-lucide="layout-dashboard"></i>Beranda</a><a data-v="kamar"><i data-lucide="bed-double"></i>Kamar</a><a data-v="res"><i data-lucide="calendar-check"></i>Reservasi</a><a data-v="lap"><i data-lucide="trending-up"></i>Laporan</a><a data-v="user" class="adm"><i data-lucide="users"></i>Pengguna</a><a data-v="set" class="adm"><i data-lucide="settings"></i>Pengaturan</a>
+            </nav>
+            <main id="m"></main>
+        </div>
+    </div>
+    <div id="toast" class="hide" role="status"></div>
+    <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyVzmnhLcOUVAsW8dGzUc4GEsGiI_lyWrg8dlhrloq-a-dwxSBjK4eXBajGrdemtuVF/exec';
+        const $ = s => document.querySelector(s),
+            rp = n => 'Rp ' + Number(n || 0).toLocaleString('id-ID'),
+            ic = (n, t) => `<i data-lucide="${n}"${t?` title="${t}"`:''}></i>`;
+        const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        } [c]));
+        const hp = s => String(s || '').replace(/^'/, ''),
+            today = () => new Date().toLocaleDateString('sv-SE');
+        let S = null,
+            view = 'dash',
+            CFG = {
+                nama: 'LOSMENKU'
+            },
+            RES = [];
+        const LS = (k, d) => {
+                try {
+                    return JSON.parse(localStorage.getItem(k)) || d
+                } catch (e) {
+                    return d
+                }
+            },
+            SV = (k, v) => {
+                try {
+                    localStorage.setItem(k, JSON.stringify(v))
+                } catch (e) {}
+            };
+        S = LS('sess', null);
+        let Q = LS('queue', []),
+            C = LS('cache', {});
+        const saveQ = () => SV('queue', Q),
+            saveC = () => SV('cache', C);
+        let raf;
+        new MutationObserver(() => {
+            cancelAnimationFrame(raf);
+            raf = requestAnimationFrame(() => window.lucide && lucide.createIcons())
+        }).observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+
+        function toast(t) {
+            const e = $('#toast');
+            e.textContent = t;
+            e.classList.remove('hide');
+            clearTimeout(toast.t);
+            toast.t = setTimeout(() => e.classList.add('hide'), 3500)
+        }
+        const E = (m, net) => {
+            const e = new Error(m);
+            e.net = net;
+            return e
+        };
+        async function net(action, data) {
+            if (!API_URL.startsWith('https://')) throw E('API_URL belum diatur di index.html', false);
+            const ctl = new AbortController(),
+                t = setTimeout(() => ctl.abort(), 25000);
+            try {
+                const r = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8'
+                    },
+                    body: JSON.stringify({
+                        action,
+                        data,
+                        token: S && S.token
+                    }),
+                    signal: ctl.signal
+                });
+                const j = await r.json();
+                if (!j.ok) {
+                    if (j.error === 'SESSION') {
+                        logout(true);
+                        const e = E('Sesi berakhir, silakan login kembali', false);
+                        e.session = true;
+                        throw e
+                    }
+                    throw E(j.error, false)
+                }
+                return j.data;
+            } catch (e) {
+                if (e.net === false) throw e;
+                throw E(e.name === 'AbortError' ? 'Koneksi timeout, coba lagi' : 'Tidak dapat terhubung ke server', true)
+            } finally {
+                clearTimeout(t)
+            }
+        }
+        /* ---- offline: cache baca, antrean tulis, sinkron otomatis ---- */
+        const WQ = new Set(['roomStatus', 'roomSave', 'roomDelete', 'resSave', 'pay', 'resAction']),
+            RC = ['roomList', 'resList', 'settingsGet'];
+        const online = () => navigator.onLine;
+
+        function netUI() {
+            const b = $('#sy');
+            if (!b) return;
+            const off = !online(),
+                n = Q.length;
+            b.classList.toggle('hide', !off && !n);
+            b.innerHTML = (off ? ic('wifi-off') + 'Offline' : ic('refresh-cw') + 'Sinkron') + (n ? ' · ' + n : '');
+            b.title = n ? n + ' data menunggu sinkronisasi' : 'Mode offline'
+        }
+
+        function dashLocal() {
+            const k = C.roomList || [],
+                r = C.resList || [],
+                t = today(),
+                cnt = s => k.filter(x => x.status === s).length,
+                sum = (l, f) => l.reduce((a, x) => a + f(x), 0);
+            return {
+                total: k.length,
+                tersedia: cnt('Tersedia'),
+                terisi: cnt('Terisi'),
+                dibersihkan: cnt('Dibersihkan'),
+                perbaikan: cnt('Perbaikan'),
+                checkinHariIni: r.filter(x => x.checkin === t && x.status === 'Booking').length,
+                checkoutHariIni: r.filter(x => x.checkout === t && x.status === 'Check-in').length,
+                okupansi: k.length ? Math.round(cnt('Terisi') / k.length * 100) : 0,
+                pendapatan: sum(r.filter(x => x.status !== 'Batal'), x => +x.dibayar || 0),
+                piutang: sum(r.filter(x => ['Booking', 'Check-in', 'Selesai'].includes(x.status)), x => Math.max(0, x.total - (+x.dibayar || 0)))
+            }
+        }
+
+        function local(a, d) { // terapkan perubahan ke cache lokal + validasi dasar
+            const rooms = C.roomList = C.roomList || [],
+                res = C.resList = C.resList || [],
+                room = id => rooms.find(x => x.id === id),
+                R = id => res.find(x => x.id === id),
+                bad = m => {
+                    throw E(m, false)
+                };
+            if (a === 'roomStatus')(room(d.id) || bad('Kamar tidak ditemukan')).status = d.status;
+            if (a === 'roomSave') {
+                const id = String(d.id).trim().toUpperCase(),
+                    k = room(id),
+                    o = {
+                        id,
+                        nama: d.nama,
+                        tipe: d.tipe,
+                        harga: +d.harga,
+                        status: k ? k.status : 'Tersedia'
+                    };
+                k ? Object.assign(k, o) : rooms.push(o)
+            }
+            if (a === 'roomDelete') {
+                if (res.some(x => x.kamar === d.id && ['Booking', 'Check-in'].includes(x.status))) bad('Kamar masih memiliki reservasi aktif');
+                C.roomList = rooms.filter(x => x.id !== d.id)
+            }
+            if (a === 'resSave') {
+                const k = room(d.kamar) || bad('Kamar tidak ditemukan');
+                if (String(d.tamu).trim().length < 2) bad('Data tamu tidak valid');
+                if (!d.checkin || !d.checkout || d.checkout <= d.checkin) bad('Tanggal check-out harus setelah check-in');
+                if (res.some(x => x.kamar === k.id && ['Booking', 'Check-in'].includes(x.status) && x.checkin < d.checkout && x.checkout > d.checkin)) bad('Reservasi bentrok: kamar sudah dipesan pada tanggal tersebut');
+                res.unshift({
+                    id: d.id,
+                    tamu: d.tamu,
+                    hp: d.hp,
+                    kamar: k.id,
+                    checkin: d.checkin,
+                    checkout: d.checkout,
+                    total: Math.round((new Date(d.checkout) - new Date(d.checkin)) / 864e5) * k.harga,
+                    status: 'Booking',
+                    oleh: S.user.username,
+                    dibayar: 0,
+                    metode: ''
+                })
+            }
+            if (a === 'pay') {
+                const r = R(d.id) || bad('Reservasi tidak ditemukan'),
+                    j = +d.jumlah;
+                if (r.status === 'Batal' || !(j > 0) || j > r.total - r.dibayar) bad('Jumlah pembayaran tidak valid');
+                r.dibayar = +r.dibayar + j;
+                r.metode = d.metode
+            }
+            if (a === 'resAction') {
+                const r = R(d.id) || bad('Reservasi tidak ditemukan'),
+                    m = {
+                        checkin: ['Booking', 'Check-in', 'Terisi'],
+                        checkout: ['Check-in', 'Selesai', 'Dibersihkan'],
+                        batal: ['Booking', 'Batal', null]
+                    } [d.type];
+                if (!m || r.status !== m[0]) bad('Status reservasi tidak sesuai untuk aksi ini');
+                if (d.type === 'checkout' && +r.dibayar < +r.total) bad('Pelunasan belum selesai. Catat pembayaran sebelum check-out');
+                r.status = m[1];
+                if (m[2] && room(r.kamar)) room(r.kamar).status = m[2]
+            }
+            saveC()
+        }
+        async function prefetch() {
+            if (!online() || Q.length || !S) return;
+            try {
+                for (const a of RC) C[a] = await net(a);
+                saveC();
+                CFG = C.settingsGet || CFG;
+                $('#pn').textContent = CFG.nama
+            } catch (e) {}
+        }
+        let syncing = false;
+        async function sync() {
+            if (syncing || !Q.length || !online() || !S) return;
+            syncing = true;
+            netUI();
+            let n = 0,
+                stop = false;
+            try {
+                while (Q.length && !stop) {
+                    const o = Q[0];
+                    try {
+                        await net(o.a, {
+                            ...o.d,
+                            opId: o.id
+                        })
+                    } catch (e) {
+                        if (e.net || e.session) {
+                            stop = true;
+                            break
+                        }
+                        toast('Sinkron ditolak (' + o.a + '): ' + e.message)
+                    }
+                    Q.shift();
+                    saveQ();
+                    n++;
+                    netUI()
+                }
+            } finally {
+                syncing = false;
+                netUI()
+            }
+            if (n && !Q.length) {
+                await prefetch();
+                toast(n + ' data offline berhasil disinkronkan');
+                if (S && !document.querySelector('.mask')) go(view)
+            }
+        }
+        async function api(a, d = {}) {
+            if (WQ.has(a)) {
+                d = {
+                    ...d,
+                    opId: crypto.randomUUID()
+                };
+                if (a === 'resSave' && !d.id) d.id = 'R' + new Date().toLocaleString('sv-SE').replace(/\D/g, '').slice(2) + Math.random().toString(36).slice(2, 5).toUpperCase();
+                if (!Q.length && online()) {
+                    try {
+                        return await net(a, d)
+                    } catch (e) {
+                        if (!e.net) throw e
+                    }
+                }
+                local(a, d);
+                const {
+                    opId,
+                    ...rest
+                } = d;
+                Q.push({
+                    id: opId,
+                    a,
+                    d: rest
+                });
+                saveQ();
+                netUI();
+                toast('Disimpan offline, otomatis dikirim saat online');
+                sync();
+                return 'queued'
+            }
+            if (RC.includes(a) || a === 'dashboard') {
+                if (Q.length) await sync();
+                if (!Q.length && online()) {
+                    try {
+                        const r = await net(a, d);
+                        if (RC.includes(a)) {
+                            C[a] = r;
+                            saveC()
+                        }
+                        return r
+                    } catch (e) {
+                        if (!e.net) throw e
+                    }
+                }
+                if (a === 'dashboard' && C.roomList) return dashLocal();
+                if (C[a]) return JSON.parse(JSON.stringify(C[a]));
+                throw E('Data belum tersedia offline. Hubungkan ke internet terlebih dahulu', true)
+            }
+            if (!online() && a !== 'logout') throw E('Fitur ini membutuhkan koneksi internet', true);
+            return net(a, d)
+        }
+        addEventListener('online', () => {
+            netUI();
+            sync()
+        });
+        addEventListener('offline', netUI);
+        setInterval(sync, 30000);
+        if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+        const run = async (f, ok) => {
+            try {
+                await f();
+                if (ok) toast(ok)
+            } catch (e) {
+                toast(e.message)
+            }
+        };
+        async function show() {
+            const on = !!S;
+            $('#login').classList.toggle('hide', on);
+            $('#shell').classList.toggle('hide', !on);
+            if (!on) return;
+            $('#who').textContent = S.user.nama + ' · ' + S.user.role;
+            document.querySelectorAll('.adm').forEach(e => e.classList.toggle('hide', S.user.role !== 'admin'));
+            netUI();
+            CFG = C.settingsGet || CFG;
+            $('#pn').textContent = CFG.nama;
+            go(view);
+            await sync();
+            await prefetch()
+        }
+
+        function logout(silent) {
+            if (S && !silent) {
+                if (Q.length && !confirm(Q.length + ' data offline belum tersinkron. Data tetap tersimpan dan dikirim saat login berikutnya. Keluar?')) return;
+                net('logout').catch(() => {})
+            }
+            S = null;
+            C = {};
+            localStorage.removeItem('sess');
+            localStorage.removeItem('cache');
+            show()
+        }
+        $('#lf').onsubmit = async e => {
+            e.preventDefault();
+            $('#le').textContent = '';
+            $('#lb').disabled = true;
+            try {
+                S = await api('login', {
+                    username: $('#u').value,
+                    password: $('#p').value
+                });
+                SV('sess', S);
+                $('#p').value = '';
+                show()
+            } catch (x) {
+                $('#le').textContent = x.message
+            }
+            $('#lb').disabled = false
+        };
+        $('#out').onclick = () => logout();
+        document.querySelectorAll('nav [data-v]').forEach(a => a.onclick = () => go(a.dataset.v));
+
+        function go(v) {
+            view = v;
+            document.querySelectorAll('nav [data-v]').forEach(a => a.classList.toggle('on', a.dataset.v === v));
+            $('#m').innerHTML = '<p>Memuat…</p>';
+            run(() => V[v]())
+        }
+
+        function modal(title, body, onOk, okLabel = 'Simpan') {
+            const d = document.createElement('div');
+            d.className = 'mask';
+            d.innerHTML = `<form class="box"><h2 style="margin-bottom:8px">${esc(title)}</h2>${body}<div class="err"></div><div style="display:flex;gap:8px;margin-top:12px">${onOk?`<button class="btn" style="flex:1">${okLabel}</button>`:''}<button type="button" class="btn g" style="flex:1">${onOk?'Batal':'Tutup'}</button></div></form>`;
+            document.body.append(d);
+            const f = d.firstChild,
+                x = () => d.remove();
+            f.querySelector('.g').onclick = x;
+            f.onsubmit = async e => {
+                e.preventDefault();
+                if (!onOk) return;
+                const o = Object.fromEntries(new FormData(f)),
+                    b = f.querySelector('.btn');
+                b.disabled = true;
+                try {
+                    await onOk(o);
+                    x()
+                } catch (er) {
+                    f.querySelector('.err').textContent = er.message;
+                    b.disabled = false
+                }
+            };
+            return f
+        }
+        const inp = (n, l, t = 'text', v = '', x = '') => `<label>${l}</label><input name="${n}" type="${t}" value="${esc(v)}" required ${x}>`;
+        const sel = (n, l, o, v) => `<label>${l}</label><select name="${n}">${o.map(([a,b])=>`<option value="${esc(a)}" ${String(a)===String(v)?'selected':''}>${esc(b)}</option>`).join('')}</select>`;
+        const tbl = (h, rows) => `<div class="tw"><table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${rows||`<tr><td colspan="${h.length}">Belum ada data</td></tr>`}</table></div>`;
+        const tag = (s, l) => `<span class="tag ${esc(s)}">${esc(l||s)}</span>`,
+            btn = (i, t, at, c = '') => `<button class="btn s ${c}" title="${t}" ${at}>${ic(i)}</button>`;
+        const card = (i, l, v, x = '') => `<div class="card"><small>${ic(i)}${l}</small><b>${v}</b>${x}</div>`;
+        /* ---- struk ---- */
+        function struk(r) {
+            const L = (a, b) => a.padEnd(14) + String(b),
+                w = 32,
+                c = s => ' '.repeat(Math.max(0, (w - s.length) >> 1)) + s,
+                m = Math.round((new Date(r.checkout) - new Date(r.checkin)) / 864e5);
+            return [c(CFG.nama), c(CFG.alamat), c('Telp ' + CFG.telp), '-'.repeat(w), 'KWITANSI ' + r.id, '-'.repeat(w), L('Tamu', r.tamu), L('Kamar', r.kamar), L('Check-in', r.checkin), L('Check-out', r.checkout), L('Malam', m), '-'.repeat(w), L('Total', rp(r.total)), L('Dibayar', rp(r.dibayar)), L('Sisa', rp(r.total - r.dibayar)), L('Metode', r.metode || '-'), L('Status', r.total - r.dibayar <= 0 ? 'LUNAS' : 'BELUM LUNAS'), '-'.repeat(w), c(CFG.footer)].join('\n')
+        }
+
+        function kwitansi(r) {
+            const t = struk(r),
+                f = modal('Kwitansi', `<div class="rc">${esc(t)}</div>`);
+            f.querySelector('.err').insertAdjacentHTML('afterend', `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button type="button" class="btn k" id="wa" style="flex:1">${ic('message-circle')}WhatsApp</button><button type="button" class="btn" id="pr" style="flex:1">${ic('printer')}Cetak 58mm</button></div>`);
+            f.querySelector('#wa').onclick = () => {
+                let n = hp(r.hp).replace(/\D/g, '');
+                if (n.startsWith('0')) n = '62' + n.slice(1);
+                window.open('https://wa.me/' + n + '?text=' + encodeURIComponent(t), '_blank', 'noopener')
+            };
+            f.querySelector('#pr').onclick = () => {
+                const d = document.createElement('div');
+                d.id = 'rcp';
+                d.textContent = t;
+                document.body.append(d);
+                window.print();
+                d.remove()
+            }
+        }
+        /* ---- views ---- */
+        const V = {
+            async dash() {
+                const [d, r] = await Promise.all([api('dashboard'), api('resList')]), t = today();
+                const row = (x, a) => `<tr><td><b>${esc(x.tamu)}</b></td><td>${esc(x.kamar)}</td><td>${esc(x.checkin)} → ${esc(x.checkout)}</td><td>${tag(x.status)}</td></tr>`;
+                $('#m').innerHTML = `<div class="top"><h2>Halo, ${esc(S.user.nama)}</h2></div><div class="grid">${card('building','Total Kamar',d.total)+card('door-open','Tersedia',d.tersedia)+card('bed-double','Terisi',d.terisi,`<div class="bar"><i style="width:${d.okupansi}%"></i></div>`)+card('sparkles','Dibersihkan',d.dibersihkan)+card('wrench','Perbaikan',d.perbaikan)+card('log-in','Check-in Hari Ini',d.checkinHariIni)+card('log-out','Check-out Hari Ini',d.checkoutHariIni)+card('wallet','Pendapatan',rp(d.pendapatan))+card('clock','Piutang',rp(d.piutang))}</div>
+  <h3>Agenda Hari Ini</h3>${tbl(['Tamu','Kamar','Tanggal','Status'],r.filter(x=>(x.checkin===t&&x.status==='Booking')||(x.checkout===t&&x.status==='Check-in')).map(row).join(''))}`
+            },
+            async kamar() {
+                const k = await api('roomList'),
+                    adm = S.user.role === 'admin',
+                    st = ['Tersedia', 'Terisi', 'Dibersihkan', 'Perbaikan'],
+                    edit = r => modal(r ? 'Ubah Kamar' : 'Tambah Kamar', inp('id', 'Kode (mis. K301)', 'text', r?.id, r ? 'readonly' : '') + inp('nama', 'Nama', 'text', r?.nama) + inp('tipe', 'Tipe', 'text', r?.tipe) + inp('harga', 'Harga per malam', 'number', r?.harga, 'min="1"'), async o => {
+                        await api('roomSave', o);
+                        V.kamar()
+                    });
+                $('#m').innerHTML = `<div class="top"><h2>Status Kamar</h2>${adm?`<button class="btn" id="add">${ic('plus')}Kamar</button>`:''}</div><div class="rooms">${k.map(r=>`<div class="card room ${esc(r.status)}"><h3>${esc(r.nama)}</h3><p>${esc(r.tipe)} · ${rp(r.harga)}/malam</p><select data-id="${esc(r.id)}">${st.map(s=>`<option ${s===r.status?'selected':''}>${s}</option>`).join('')}</select>${adm?`<div style="margin-top:8px;display:flex;gap:6px">${btn('pencil','Ubah',`data-e="${esc(r.id)}"`,'g')}${btn('trash-2','Hapus',`data-x="${esc(r.id)}"`,'d')}</div>`:''}</div>`).join('')||'<p>Belum ada kamar</p>'}</div>`;
+                document.querySelectorAll('#m select').forEach(s => s.onchange = () => run(async () => {
+                    await api('roomStatus', {
+                        id: s.dataset.id,
+                        status: s.value
+                    });
+                    V.kamar()
+                }, 'Status diperbarui'));
+                if (adm) {
+                    $('#add').onclick = () => edit();
+                    document.querySelectorAll('[data-e]').forEach(b => b.onclick = () => edit(k.find(x => x.id === b.dataset.e)));
+                    document.querySelectorAll('[data-x]').forEach(b => b.onclick = () => {
+                        if (confirm('Hapus kamar ' + b.dataset.x + '?')) run(async () => {
+                            await api('roomDelete', {
+                                id: b.dataset.x
+                            });
+                            V.kamar()
+                        }, 'Kamar dihapus')
+                    })
+                }
+            },
+            async res() {
+                const [r, k] = await Promise.all([api('resList'), api('roomList')]);
+                RES = r;
+                $('#m').innerHTML = `<div class="top"><h2>Reservasi</h2><div><input id="q" placeholder="Cari tamu / kamar…" type="search"><select id="fs"><option value="">Semua status</option>${['Booking','Check-in','Selesai','Batal'].map(s=>`<option>${s}</option>`).join('')}</select><button class="btn" id="add">${ic('plus')}Reservasi</button></div></div><div id="rl"></div>`;
+                const draw = () => {
+                    const q = $('#q').value.toLowerCase(),
+                        f = $('#fs').value,
+                        l = RES.filter(x => (!f || x.status === f) && (x.tamu + x.kamar + x.id).toLowerCase().includes(q));
+                    $('#rl').innerHTML = tbl(['Tamu', 'Kamar', 'Tanggal', 'Total / Dibayar', 'Status', 'Aksi'], l.map(x => {
+                        const sisa = x.total - x.dibayar,
+                            B = x.status === 'Booking',
+                            C = x.status === 'Check-in';
+                        return `<tr><td><b>${esc(x.tamu)}</b><br><small>${esc(hp(x.hp))}</small></td><td>${esc(x.kamar)}</td><td>${esc(x.checkin)} → ${esc(x.checkout)}</td><td>${rp(x.total)}<br><small>${sisa<=0?'Lunas':'Dibayar '+rp(x.dibayar)}</small></td><td>${tag(x.status)}</td><td class="a">${(B||C)&&sisa>0?btn('wallet','Catat pembayaran',`data-a="pay" data-id="${esc(x.id)}"`,'k'):''} ${B?btn('log-in','Check-in',`data-a="checkin" data-id="${esc(x.id)}"`):''}${C?btn('log-out','Check-out',`data-a="checkout" data-id="${esc(x.id)}"`):''} ${x.status!=='Batal'?btn('receipt','Kwitansi',`data-a="rc" data-id="${esc(x.id)}"`,'g'):''} ${B?btn('ban','Batalkan',`data-a="batal" data-id="${esc(x.id)}"`,'d'):''}</td></tr>`
+                    }).join(''))
+                };
+                $('#rl').onclick = e => {
+                    const b = e.target.closest('[data-a]');
+                    if (!b) return;
+                    const x = RES.find(y => y.id === b.dataset.id),
+                        a = b.dataset.a;
+                    if (a === 'rc') return kwitansi(x);
+                    if (a === 'pay') return modal('Catat Pembayaran', `<p>${esc(x.tamu)} · sisa <b>${rp(x.total-x.dibayar)}</b></p>` + inp('jumlah', 'Jumlah (Rp)', 'number', x.total - x.dibayar, `min="1" max="${x.total-x.dibayar}"`) + sel('metode', 'Metode', ['Tunai', 'Transfer', 'QRIS'].map(m => [m, m])), async o => {
+                        await api('pay', {
+                            id: x.id,
+                            ...o
+                        });
+                        V.res()
+                    });
+                    if (a === 'batal' && !confirm('Batalkan reservasi ini?')) return;
+                    run(async () => {
+                        await api('resAction', {
+                            id: x.id,
+                            type: a
+                        });
+                        V.res()
+                    }, 'Berhasil')
+                };
+                $('#q').oninput = draw;
+                $('#fs').onchange = draw;
+                draw();
+                $('#add').onclick = () => modal('Reservasi Baru', inp('tamu', 'Nama tamu', 'text', '', 'maxlength="60"') + inp('hp', 'No. HP / WhatsApp', 'tel', '', 'maxlength="20"') + sel('kamar', 'Kamar', k.map(x => [x.id, `${x.nama} - ${rp(x.harga)}`])) + inp('checkin', 'Check-in', 'date', today()) + inp('checkout', 'Check-out', 'date'), async o => {
+                    await api('resSave', o);
+                    V.res()
+                })
+            },
+            async lap() {
+                const r = await api('resList'),
+                    mo = today().slice(0, 7);
+                $('#m').innerHTML = `<div class="top"><h2>Laporan</h2><div><input type="month" id="mo" value="${mo}"><button class="btn g" id="csv">${ic('download')}CSV</button></div></div><div id="lr"></div>`;
+                let l = [];
+                const draw = () => {
+                    l = r.filter(x => x.checkin.startsWith($('#mo').value) && x.status !== 'Batal');
+                    const T = l.reduce((a, x) => a + Number(x.total), 0),
+                        P = l.reduce((a, x) => a + Number(x.dibayar), 0);
+                    $('#lr').innerHTML = `<div class="grid">${card('calendar-check','Reservasi',l.length)+card('receipt','Total Tagihan',rp(T))+card('wallet','Diterima',rp(P))+card('clock','Piutang',rp(T-P))}</div>` + tbl(['ID', 'Tamu', 'Kamar', 'Check-in', 'Total', 'Dibayar', 'Status'], l.map(x => `<tr><td>${esc(x.id)}</td><td>${esc(x.tamu)}</td><td>${esc(x.kamar)}</td><td>${esc(x.checkin)}</td><td>${rp(x.total)}</td><td>${rp(x.dibayar)}</td><td>${tag(x.status)}</td></tr>`).join(''))
+                };
+                $('#mo').onchange = draw;
+                draw();
+                $('#csv').onclick = () => {
+                    const q = v => '"' + String(/^[=+\-@]/.test(v) ? "'" + v : v).replace(/"/g, '""') + '"',
+                        rows = [
+                            ['ID', 'Tamu', 'HP', 'Kamar', 'Check-in', 'Check-out', 'Total', 'Dibayar', 'Metode', 'Status'], ...l.map(x => [x.id, x.tamu, hp(x.hp), x.kamar, x.checkin, x.checkout, x.total, x.dibayar, x.metode, x.status])
+                        ];
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(new Blob(['\ufeff' + rows.map(z => z.map(q).join(',')).join('\n')], {
+                        type: 'text/csv'
+                    }));
+                    a.download = 'laporan-' + $('#mo').value + '.csv';
+                    a.click();
+                    URL.revokeObjectURL(a.href)
+                }
+            },
+            async user() {
+                const u = await api('userList');
+                const pwf = inp('password', 'Password (min. 8, huruf & angka)', 'password', '', 'minlength="8" autocomplete="new-password"'),
+                    roles = [
+                        ['staff', 'Staf'],
+                        ['admin', 'Admin']
+                    ];
+                $('#m').innerHTML = `<div class="top"><h2>Pengguna</h2><button class="btn" id="add">${ic('plus')}Pengguna</button></div>` +
+                    tbl(['Username', 'Nama', 'Peran', 'Status', 'Aksi'], u.map(x => `<tr><td>${esc(x.username)}</td><td>${esc(x.nama)}</td><td>${esc(x.role)}</td><td>${tag(x.aktif?'Aktif':'Nonaktif')}</td><td class="a">${btn('pencil','Ubah',`data-t="${esc(x.username)}"`,'g')} ${btn('key-round','Reset password',`data-reset="${esc(x.username)}"`,'g')}</td></tr>`).join(''));
+                $('#add').onclick = () => modal('Pengguna Baru', inp('username', 'Username') + inp('nama', 'Nama lengkap') + sel('role', 'Peran', roles) + pwf, async o => {
+                    await api('userSave', o);
+                    V.user()
+                });
+                document.querySelectorAll('[data-t]').forEach(b => {
+                    const x = u.find(y => y.username === b.dataset.t);
+                    b.onclick = () => modal('Ubah ' + x.username, inp('nama', 'Nama', 'text', x.nama) + sel('role', 'Peran', roles, x.role) + sel('aktif', 'Status', [
+                        ['true', 'Aktif'],
+                        ['false', 'Nonaktif']
+                    ], String(x.aktif)), async o => {
+                        await api('userSave', {
+                            username: x.username,
+                            nama: o.nama,
+                            role: o.role,
+                            aktif: o.aktif === 'true'
+                        });
+                        V.user()
+                    })
+                });
+                document.querySelectorAll('[data-reset]').forEach(b => b.onclick = () => modal('Reset password ' + b.dataset.reset, inp('password', 'Password baru', 'password', '', 'minlength="8" autocomplete="new-password"'), async o => {
+                    await api('userReset', {
+                        username: b.dataset.reset,
+                        password: o.password
+                    });
+                    toast('Password direset')
+                }))
+            },
+            async set() {
+                const [c, l] = await Promise.all([api('settingsGet'), api('logList')]);
+                $('#m').innerHTML = `<div class="top"><h2>Pengaturan</h2></div><form class="card" id="sf" style="max-width:480px;margin-bottom:18px"><b style="font-size:16px">Identitas Properti (tampil di kwitansi)</b>${inp('nama','Nama','text',c.nama)+inp('alamat','Alamat','text',c.alamat)+inp('telp','Telepon','text',c.telp)+inp('footer','Catatan kaki','text',c.footer)}<button class="btn" style="margin-top:12px">${ic('save')}Simpan</button></form>
+  <h3>Log Aktivitas</h3>` + tbl(['Waktu', 'Pengguna', 'Aksi', 'Detail'], l.map(x => `<tr><td>${esc(String(x.waktu).replace('T',' ').slice(0,16))}</td><td>${esc(x.user)}</td><td>${esc(x.aksi)}</td><td>${esc(x.detail)}</td></tr>`).join(''));
+                $('#sf').onsubmit = e => {
+                    e.preventDefault();
+                    run(async () => {
+                        await api('settingsSave', Object.fromEntries(new FormData(e.target)));
+                        CFG = await api('settingsGet');
+                        $('#pn').textContent = CFG.nama
+                    }, 'Pengaturan disimpan')
+                }
+            }
+        };
+        $('#pw').onclick = () => modal('Ganti Password', inp('lama', 'Password lama', 'password', '', 'autocomplete="current-password"') + inp('baru', 'Password baru (min. 8, huruf & angka)', 'password', '', 'minlength="8" autocomplete="new-password"'), async o => {
+            await api('changePassword', o);
+            toast('Password diganti')
+        });
+        show();
+    </script>
+</body>
+
+</html>
