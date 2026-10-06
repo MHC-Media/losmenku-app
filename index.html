@@ -7,22 +7,37 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; worker-src 'self'; connect-src https://script.google.com https://script.googleusercontent.com">
     <meta name="referrer" content="no-referrer">
     <title>LOSMENKU</title>
+    <link rel="preconnect" href="https://script.google.com">
+    <link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#004ac6">
     <link rel="apple-touch-icon" href="icon-192.png">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --p: #004ac6;
-            --pc: #2563eb;
-            --pf: #dbe1ff;
-            --bg: #f7f9fb;
-            --tx: #191c1e;
-            --mut: #434655;
-            --ln: #c3c6d7;
-            --err: #ba1a1a;
-            --ok: #0a7a3d;
-            --warn: #b45309
+            --p: #2563eb;
+            --p2: #7c3aed;
+            --bg: #f3f5fb;
+            --sf: #fff;
+            --tx: #0f172a;
+            --mut: #64748b;
+            --ln: #e5e9f2;
+            --err: #dc2626;
+            --ok: #16a34a;
+            --warn: #d97706;
+            --sh: 0 1px 2px #0f172a0d, 0 6px 20px #0f172a0b;
+            --hd: #ffffffd9
+        }
+
+        [data-t=dark] {
+            --bg: #0b1120;
+            --sf: #131c31;
+            --tx: #e8ecf7;
+            --mut: #93a0b8;
+            --ln: #24304a;
+            --sh: 0 1px 2px #0006;
+            --hd: #0b1120d9
         }
 
         * {
@@ -33,13 +48,15 @@
             margin: 0;
             font: 15px/1.5 'Plus Jakarta Sans', system-ui, sans-serif;
             background: var(--bg);
-            color: var(--tx)
+            color: var(--tx);
+            -webkit-tap-highlight-color: transparent
         }
 
         button,
         input,
         select {
-            font: inherit
+            font: inherit;
+            color: inherit
         }
 
         .hide {
@@ -53,30 +70,48 @@
             flex: none
         }
 
+        h2 {
+            margin: 0;
+            font-size: 22px;
+            letter-spacing: -.02em
+        }
+
+        h3 {
+            margin: 0 0 10px;
+            font-size: 16px
+        }
+
         .btn {
             border: 0;
             border-radius: 12px;
             padding: 10px 16px;
-            background: var(--pc);
+            background: linear-gradient(135deg, var(--p), #4f46e5);
             color: #fff;
             font-weight: 600;
             cursor: pointer;
             display: inline-flex;
             gap: 6px;
             align-items: center;
-            justify-content: center
+            justify-content: center;
+            transition: .15s
         }
 
         .btn:hover {
-            opacity: .92
+            filter: brightness(1.08)
+        }
+
+        .btn:active {
+            transform: scale(.97)
         }
 
         .btn:disabled {
-            opacity: .5
+            opacity: .5;
+            pointer-events: none
         }
 
         .btn.s {
-            padding: 6px 8px
+            padding: 7px 9px;
+            border-radius: 10px
         }
 
         .btn.s svg {
@@ -85,7 +120,7 @@
         }
 
         .btn.g {
-            background: #eceef0;
+            background: var(--ln);
             color: var(--tx)
         }
 
@@ -103,13 +138,17 @@
             padding: 11px 12px;
             border: 1px solid var(--ln);
             border-radius: 12px;
-            background: #fff
+            background: var(--sf)
         }
 
         input:focus,
         select:focus {
-            outline: 2px solid var(--pc);
+            outline: 2px solid var(--p);
             border-color: transparent
+        }
+
+        input[readonly] {
+            opacity: .6
         }
 
         label {
@@ -125,26 +164,34 @@
             display: grid;
             place-items: center;
             padding: 20px;
-            background: linear-gradient(135deg, #004ac6, #2563eb 60%, #00759f)
+            background: radial-gradient(at 20% 10%, #4f46e5, transparent 50%), linear-gradient(135deg, #1d4ed8, #2563eb 55%, #0891b2)
         }
 
         .box {
-            background: #fff;
-            border-radius: 20px;
+            background: var(--sf);
+            border-radius: 22px;
             padding: 26px;
             width: 100%;
             max-width: 400px;
-            box-shadow: 0 20px 50px #0003
+            box-shadow: 0 24px 60px #0004;
+            animation: up .3s
         }
 
         .logo {
-            font-weight: 700;
-            font-size: 24px;
-            color: var(--p);
+            font-weight: 800;
+            font-size: 22px;
             letter-spacing: -.02em;
             display: flex;
             gap: 8px;
-            align-items: center
+            align-items: center;
+            background: linear-gradient(135deg, var(--p), var(--p2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent
+        }
+
+        .logo svg {
+            color: var(--p)
         }
 
         .err {
@@ -158,8 +205,9 @@
             position: sticky;
             top: 0;
             z-index: 9;
-            background: #fff;
-            border-bottom: 1px solid #eceef0;
+            background: var(--hd);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--ln);
             padding: 10px 16px;
             display: flex;
             align-items: center;
@@ -182,16 +230,15 @@
         }
 
         nav {
-            width: 210px;
-            background: #fff;
-            border-right: 1px solid #eceef0;
+            width: 216px;
             padding: 14px;
             display: flex;
             flex-direction: column;
             gap: 4px;
             position: sticky;
             top: 57px;
-            height: calc(100vh - 57px)
+            height: calc(100vh - 57px);
+            border-right: 1px solid var(--ln)
         }
 
         nav a {
@@ -202,27 +249,41 @@
             cursor: pointer;
             display: flex;
             gap: 10px;
-            align-items: center
+            align-items: center;
+            transition: .15s
+        }
+
+        nav a:hover {
+            background: var(--ln)
         }
 
         nav a.on {
-            background: var(--pf);
-            color: var(--p)
+            background: linear-gradient(135deg, var(--p), #4f46e5);
+            color: #fff;
+            box-shadow: 0 6px 16px #2563eb44
         }
 
         main {
             flex: 1;
             padding: 22px;
-            max-width: 1100px;
+            max-width: 1120px;
             margin: 0 auto;
             width: 100%;
-            min-width: 0
+            min-width: 0;
+            animation: in .25s
         }
 
-        h2 {
-            margin: 0;
-            font-size: 22px;
-            letter-spacing: -.01em
+        @keyframes in {
+            from {
+                opacity: .4
+            }
+        }
+
+        @keyframes up {
+            from {
+                transform: translateY(14px);
+                opacity: 0
+            }
         }
 
         .top {
@@ -243,79 +304,160 @@
         .top input,
         .top select {
             width: auto;
-            min-width: 140px
+            min-width: 130px
+        }
+
+        .hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+            padding: 20px;
+            border-radius: 20px;
+            color: #fff;
+            background: linear-gradient(135deg, #2563eb, #7c3aed)
+        }
+
+        .hero p {
+            margin: 2px 0 0;
+            opacity: .85;
+            font-size: 13px
+        }
+
+        .hero .btn {
+            background: #fff3
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 12px;
             margin-bottom: 16px
         }
 
         .card {
-            background: #fff;
-            border-radius: 16px;
-            padding: 14px;
-            box-shadow: 0 1px 3px #0001
+            background: var(--sf);
+            border-radius: 18px;
+            padding: 16px;
+            box-shadow: var(--sh)
         }
 
-        .card small {
-            color: var(--mut);
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 11px;
-            letter-spacing: .05em;
+        .stat {
             display: flex;
-            gap: 6px;
+            gap: 12px;
             align-items: center
         }
 
-        .card b {
-            display: block;
-            font-size: 24px;
-            margin-top: 2px
+        .ib {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: color-mix(in srgb, var(--c) 15%, transparent);
+            color: var(--c)
         }
 
-        .bar {
-            height: 8px;
-            background: #eceef0;
-            border-radius: 9px;
-            overflow: hidden;
-            margin-top: 6px
+        .ib svg {
+            width: 22px;
+            height: 22px
         }
 
-        .bar i {
+        .stat small {
+            color: var(--mut);
+            font-weight: 600;
+            font-size: 12px
+        }
+
+        .stat b {
             display: block;
-            height: 100%;
-            background: var(--pc)
+            font-size: 21px;
+            line-height: 1.2
+        }
+
+        .cols {
+            display: grid;
+            grid-template-columns: 3fr 2fr;
+            gap: 12px;
+            margin-bottom: 16px
+        }
+
+        .dn {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            justify-content: center
+        }
+
+        .lg {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            font-size: 13px
+        }
+
+        .lg li {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            padding: 3px 0
+        }
+
+        .lg i {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%
+        }
+
+        .lg b {
+            margin-left: auto;
+            padding-left: 14px
+        }
+
+        svg rect {
+            transform-box: fill-box;
+            transform-origin: bottom;
+            animation: gr .6s ease-out
+        }
+
+        @keyframes gr {
+            from {
+                transform: scaleY(0)
+            }
         }
 
         .tw {
             overflow-x: auto;
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 1px 3px #0001
+            background: var(--sf);
+            border-radius: 18px;
+            box-shadow: var(--sh)
         }
 
         table {
             width: 100%;
-            border-collapse: collapse;
-            min-width: 620px
+            border-collapse: collapse
         }
 
         th,
         td {
-            padding: 11px 12px;
+            padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #eceef0;
+            border-bottom: 1px solid var(--ln);
             font-size: 14px
+        }
+
+        tr:last-child td {
+            border: 0
         }
 
         th {
             color: var(--mut);
             font-size: 11px;
-            text-transform: uppercase
+            text-transform: uppercase;
+            letter-spacing: .04em
         }
 
         td.a {
@@ -326,33 +468,33 @@
             padding: 3px 10px;
             border-radius: 99px;
             font-size: 12px;
-            font-weight: 600;
-            background: #eceef0
+            font-weight: 700;
+            background: var(--ln)
         }
 
         .Tersedia,
         .Selesai,
         .Aktif {
-            background: #d5f5e3;
+            background: #16a34a22;
             color: var(--ok)
         }
 
         .Terisi,
         .Check-in {
-            background: var(--pf);
+            background: #2563eb22;
             color: var(--p)
         }
 
         .Dibersihkan,
         .Booking {
-            background: #fef3c7;
+            background: #d9770622;
             color: var(--warn)
         }
 
         .Perbaikan,
         .Batal,
         .Nonaktif {
-            background: #ffdad6;
+            background: #dc262622;
             color: var(--err)
         }
 
@@ -363,7 +505,7 @@
         }
 
         .room {
-            border-left: 5px solid var(--ln)
+            border-top: 4px solid var(--ln)
         }
 
         .room.Tersedia {
@@ -371,7 +513,7 @@
         }
 
         .room.Terisi {
-            border-color: var(--pc)
+            border-color: var(--p)
         }
 
         .room.Dibersihkan {
@@ -383,20 +525,41 @@
         }
 
         .room h3 {
-            margin: 0;
-            font-size: 17px
+            margin: 0
         }
 
         .room p {
-            margin: 2px 0 8px;
+            margin: 2px 0 10px;
             color: var(--mut);
             font-size: 13px
+        }
+
+        .empty {
+            text-align: center;
+            color: var(--mut);
+            padding: 30px;
+            grid-column: 1/-1
+        }
+
+        .skel {
+            height: 90px;
+            border-radius: 18px;
+            background: linear-gradient(90deg, var(--ln), var(--sf), var(--ln));
+            background-size: 200% 100%;
+            animation: sh 1.1s infinite
+        }
+
+        @keyframes sh {
+            to {
+                background-position: -200% 0
+            }
         }
 
         .mask {
             position: fixed;
             inset: 0;
-            background: #0006;
+            background: #0f172a80;
+            backdrop-filter: blur(3px);
             display: grid;
             place-items: center;
             padding: 14px;
@@ -411,7 +574,8 @@
         .rc {
             font: 12px/1.4 ui-monospace, Menlo, monospace;
             background: #fafafa;
-            border: 1px dashed var(--ln);
+            color: #111;
+            border: 1px dashed #bbb;
             padding: 12px;
             white-space: pre-wrap;
             width: 240px;
@@ -420,15 +584,17 @@
 
         #toast {
             position: fixed;
-            bottom: 80px;
+            bottom: 90px;
             left: 50%;
             transform: translateX(-50%);
-            background: #2d3133;
+            background: #0f172a;
             color: #fff;
             padding: 12px 18px;
-            border-radius: 12px;
+            border-radius: 14px;
             z-index: 30;
-            max-width: 90vw
+            max-width: 90vw;
+            box-shadow: 0 10px 30px #0005;
+            animation: up .2s
         }
 
         #rcp {
@@ -454,35 +620,51 @@
             }
         }
 
+        @media(max-width:860px) {
+            .cols {
+                grid-template-columns: 1fr
+            }
+        }
+
         @media(max-width:760px) {
             #app {
                 display: block;
-                padding-bottom: 70px
+                padding-bottom: 84px
             }
 
             nav {
                 position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
+                bottom: 10px;
+                left: 10px;
+                right: 10px;
                 top: auto;
                 width: auto;
                 height: auto;
                 flex-direction: row;
-                justify-content: space-around;
-                padding: 4px 2px calc(4px + env(safe-area-inset-bottom));
+                gap: 2px;
+                padding: 6px;
                 z-index: 10;
-                border: 0;
-                box-shadow: 0 -2px 10px #0002;
-                overflow-x: auto
+                border: 1px solid var(--ln);
+                border-radius: 20px;
+                background: var(--hd);
+                backdrop-filter: blur(14px);
+                box-shadow: 0 10px 30px #0003
             }
 
             nav a {
+                flex: 1;
                 flex-direction: column;
                 gap: 0;
-                padding: 6px 8px;
-                font-size: 11px;
-                white-space: nowrap
+                padding: 6px 2px;
+                font-size: 10px;
+                justify-content: center;
+                align-items: center;
+                min-width: 0
+            }
+
+            nav a svg {
+                width: 20px;
+                height: 20px
             }
 
             main {
@@ -491,6 +673,87 @@
 
             header span {
                 display: none
+            }
+
+            .grid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .stat {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px
+            }
+
+            .tw {
+                background: none;
+                box-shadow: none;
+                overflow: visible
+            }
+
+            table,
+            tbody {
+                display: block
+            }
+
+            thead {
+                display: none
+            }
+
+            tr {
+                display: block;
+                background: var(--sf);
+                margin-bottom: 10px;
+                border-radius: 16px;
+                box-shadow: var(--sh);
+                padding: 6px 0
+            }
+
+            td {
+                display: flex;
+                justify-content: space-between;
+                gap: 12px;
+                border: 0;
+                padding: 5px 14px;
+                text-align: right
+            }
+
+            td::before {
+                content: attr(data-l);
+                color: var(--mut);
+                font-weight: 600;
+                font-size: 12px;
+                text-align: left;
+                flex: none
+            }
+
+            td.a {
+                justify-content: flex-end;
+                flex-wrap: wrap
+            }
+
+            td.a::before {
+                display: none
+            }
+
+            .mask {
+                align-items: end;
+                padding: 0
+            }
+
+            .mask .box {
+                max-width: none;
+                border-radius: 24px 24px 0 0;
+                animation: up .25s
+            }
+
+            .top>div {
+                width: 100%
+            }
+
+            .top input,
+            .top select {
+                flex: 1
             }
         }
     </style>
@@ -509,7 +772,7 @@
     <div id="shell" class="hide">
         <header>
             <div class="logo"><i data-lucide="building-2"></i><b id="pn">LOSMENKU</b></div>
-            <div class="sp"></div><button class="btn g s hide" id="sy"></button><span id="who"></span><button class="btn g s" id="pw" title="Ganti password"><i data-lucide="key-round"></i></button><button class="btn g s" id="out" title="Keluar"><i data-lucide="log-out"></i></button>
+            <div class="sp"></div><button class="btn g s hide" id="sy"></button><span id="who"></span><button class="btn g s" id="th" title="Tema"><i data-lucide="moon"></i></button><button class="btn g s" id="pw" title="Ganti password"><i data-lucide="key-round"></i></button><button class="btn g s" id="out" title="Keluar"><i data-lucide="log-out"></i></button>
         </header>
         <div id="app">
             <nav>
@@ -614,7 +877,7 @@
             }
         }
         /* ---- offline: cache baca, antrean tulis, sinkron otomatis ---- */
-        const WQ = new Set(['roomStatus', 'roomSave', 'roomDelete', 'resSave', 'pay', 'resAction']),
+        const WQ = new Set(['roomStatus', 'roomSave', 'roomDelete', 'resSave', 'resEdit', 'pay', 'resAction']),
             RC = ['roomList', 'resList', 'settingsGet'];
         const online = () => navigator.onLine;
 
@@ -692,6 +955,26 @@
                     metode: ''
                 })
             }
+            if (a === 'resEdit') {
+                const r = R(d.id) || bad('Reservasi tidak ditemukan');
+                if (!['Booking', 'Check-in'].includes(r.status)) bad('Reservasi ini tidak dapat diubah');
+                if (String(d.tamu).trim().length < 2) bad('Data tamu tidak valid');
+                if (r.status === 'Booking') {
+                    const k = room(d.kamar) || bad('Kamar tidak ditemukan');
+                    if (!d.checkin || !d.checkout || d.checkout <= d.checkin) bad('Tanggal check-out harus setelah check-in');
+                    if (res.some(x => x.id !== r.id && x.kamar === k.id && ['Booking', 'Check-in'].includes(x.status) && x.checkin < d.checkout && x.checkout > d.checkin)) bad('Reservasi bentrok: kamar sudah dipesan pada tanggal tersebut');
+                    const t = Math.round((new Date(d.checkout) - new Date(d.checkin)) / 864e5) * k.harga;
+                    if (t < +r.dibayar) bad('Total baru lebih kecil dari pembayaran yang sudah diterima');
+                    Object.assign(r, {
+                        kamar: k.id,
+                        checkin: d.checkin,
+                        checkout: d.checkout,
+                        total: t
+                    })
+                }
+                r.tamu = d.tamu;
+                r.hp = d.hp
+            }
             if (a === 'pay') {
                 const r = R(d.id) || bad('Reservasi tidak ditemukan'),
                     j = +d.jumlah;
@@ -713,14 +996,31 @@
             }
             saveC()
         }
-        async function prefetch() {
-            if (!online() || Q.length || !S) return;
-            try {
-                for (const a of RC) C[a] = await net(a);
-                saveC();
-                CFG = C.settingsGet || CFG;
-                $('#pn').textContent = CFG.nama
-            } catch (e) {}
+        let rf = null,
+            lastRf = 0;
+        const prefetch = () => refresh(true, true);
+
+        function refresh(force, quiet) { // ambil semua data sekaligus (1 request); tampilan memakai cache dulu agar instan
+            if (!S || !online() || Q.length) return Promise.resolve();
+            if (!force && (rf || Date.now() - lastRf < 15000)) return rf || Promise.resolve();
+            const one = () => {
+                lastRf = Date.now();
+                return net('boot').then(b => {
+                    const o = JSON.stringify([C.roomList, C.resList]);
+                    C.roomList = b.rooms;
+                    C.resList = b.res;
+                    C.settingsGet = b.cfg;
+                    saveC();
+                    CFG = b.cfg;
+                    $('#pn').textContent = CFG.nama;
+                    if (!quiet && o !== JSON.stringify([C.roomList, C.resList]) && !document.querySelector('.mask') && !Q.length && ['dash', 'kamar', 'res', 'lap'].includes(view)) go(view, true)
+                })
+            };
+            const p = (rf || Promise.resolve()).then(one).catch(() => {}).finally(() => {
+                if (rf === p) rf = null
+            });
+            rf = p;
+            return p
         }
         let syncing = false;
         async function sync() {
@@ -756,7 +1056,7 @@
             if (n && !Q.length) {
                 await prefetch();
                 toast(n + ' data offline berhasil disinkronkan');
-                if (S && !document.querySelector('.mask')) go(view)
+                if (S && !document.querySelector('.mask')) go(view, true)
             }
         }
         async function api(a, d = {}) {
@@ -768,7 +1068,12 @@
                 if (a === 'resSave' && !d.id) d.id = 'R' + new Date().toLocaleString('sv-SE').replace(/\D/g, '').slice(2) + Math.random().toString(36).slice(2, 5).toUpperCase();
                 if (!Q.length && online()) {
                     try {
-                        return await net(a, d)
+                        const r = await net(a, d);
+                        try {
+                            local(a, d)
+                        } catch (e) {}
+                        refresh(true);
+                        return r
                     } catch (e) {
                         if (!e.net) throw e
                     }
@@ -790,19 +1095,12 @@
                 return 'queued'
             }
             if (RC.includes(a) || a === 'dashboard') {
-                if (Q.length) await sync();
-                if (!Q.length && online()) {
-                    try {
-                        const r = await net(a, d);
-                        if (RC.includes(a)) {
-                            C[a] = r;
-                            saveC()
-                        }
-                        return r
-                    } catch (e) {
-                        if (!e.net) throw e
-                    }
-                }
+                if (Q.length && online()) await sync();
+                const have = a === 'dashboard' ? C.roomList && C.resList : C[a];
+                if (!have) {
+                    if (rf) await rf;
+                    else await refresh(true, true)
+                } else refresh(); // ada cache: tampil instan, perbarui di latar belakang
                 if (a === 'dashboard' && C.roomList) return dashLocal();
                 if (C[a]) return JSON.parse(JSON.stringify(C[a]));
                 throw E('Data belum tersedia offline. Hubungkan ke internet terlebih dahulu', true)
@@ -836,8 +1134,7 @@
             CFG = C.settingsGet || CFG;
             $('#pn').textContent = CFG.nama;
             go(view);
-            await sync();
-            await prefetch()
+            sync()
         }
 
         function logout(silent) {
@@ -871,13 +1168,6 @@
         $('#out').onclick = () => logout();
         document.querySelectorAll('nav [data-v]').forEach(a => a.onclick = () => go(a.dataset.v));
 
-        function go(v) {
-            view = v;
-            document.querySelectorAll('nav [data-v]').forEach(a => a.classList.toggle('on', a.dataset.v === v));
-            $('#m').innerHTML = '<p>Memuat…</p>';
-            run(() => V[v]())
-        }
-
         function modal(title, body, onOk, okLabel = 'Simpan') {
             const d = document.createElement('div');
             d.className = 'mask';
@@ -886,6 +1176,9 @@
             const f = d.firstChild,
                 x = () => d.remove();
             f.querySelector('.g').onclick = x;
+            d.onclick = e => {
+                if (e.target === d) x()
+            };
             f.onsubmit = async e => {
                 e.preventDefault();
                 if (!onOk) return;
@@ -904,10 +1197,73 @@
         }
         const inp = (n, l, t = 'text', v = '', x = '') => `<label>${l}</label><input name="${n}" type="${t}" value="${esc(v)}" required ${x}>`;
         const sel = (n, l, o, v) => `<label>${l}</label><select name="${n}">${o.map(([a,b])=>`<option value="${esc(a)}" ${String(a)===String(v)?'selected':''}>${esc(b)}</option>`).join('')}</select>`;
-        const tbl = (h, rows) => `<div class="tw"><table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${rows||`<tr><td colspan="${h.length}">Belum ada data</td></tr>`}</table></div>`;
         const tag = (s, l) => `<span class="tag ${esc(s)}">${esc(l||s)}</span>`,
             btn = (i, t, at, c = '') => `<button class="btn s ${c}" title="${t}" ${at}>${ic(i)}</button>`;
-        const card = (i, l, v, x = '') => `<div class="card"><small>${ic(i)}${l}</small><b>${v}</b>${x}</div>`;
+        let tok = 0;
+        const ST = {
+            q: '',
+            fs: '',
+            kq: '',
+            kf: ''
+        };
+        const P = () => {
+            const t = tok,
+                f = h => {
+                    if (t === tok) $('#m').innerHTML = h
+                };
+            f.ok = () => t === tok;
+            return f
+        };
+        const tbl = (h, rows) => `<div class="tw"><table><thead><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows?(()=>{let i=0;return rows.replace(/<tr>|<td/g,m=>m==='<tr>'?(i=0,m):`<td data-l="${h[i++]||''}"`)})():` < tr > < td colspan = "${h.length}"
+        class = "empty" > Belum ada data < /td></tr > `}</tbody></table></div>`;
+        const card = (i, l, v, c = '#2563eb') => `<div class="card stat"><div class="ib" style="--c:${c}">${ic(i)}</div><div><small>${l}</small><b>${v}</b></div></div>`;
+        const skel = () => '<div class="grid"><div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div></div><div class="skel" style="height:220px"></div>';
+        const errCard = e => `<div class="card" style="text-align:center;padding:32px"><div class="ib" style="--c:#dc2626;margin:0 auto 10px">${ic('triangle-alert')}</div><h3>Gagal memuat data</h3><p style="color:var(--mut)">${esc(e.message)}</p><button class="btn" id="rt">${ic('refresh-cw')}Coba lagi</button></div>`;
+        async function go(v, silent) {
+            if (!silent) {
+                tok++;
+                view = v;
+                document.querySelectorAll('nav [data-v]').forEach(a => a.classList.toggle('on', a.dataset.v === v));
+                if (!(C.roomList && C.resList) || ['user', 'set'].includes(v)) $('#m').innerHTML = skel()
+            }
+            try {
+                await V[v]()
+            } catch (e) {
+                if (!silent && view === v) {
+                    $('#m').innerHTML = errCard(e);
+                    $('#rt').onclick = () => go(v)
+                }
+            }
+        }
+        document.querySelectorAll('nav [data-v]').forEach(a => a.onclick = () => go(a.dataset.v));
+        const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
+        function barChart(d) {
+            const W = 520,
+                H = 190,
+                p = 26,
+                mx = Math.max(...d.map(x => x.v), 1),
+                bw = (W - p * 2) / d.length,
+                y = t => H - p - (H - p * 2) * t;
+            return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Grafik batang"><defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2563eb"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs>${[0,.5,1].map(t=>`<line x1="${p}" x2="${W-p}" y1="${y(t)}" y2="${y(t)}" stroke="var(--ln)" stroke-dasharray="4"/>`).join('')}${d.map((x,i)=>{const h=(H-p*2)*x.v/mx,X=p+i*bw+bw*.18;return`<rect x="${X}" y="${H-p-h}" width="${bw*.64}" height="${Math.max(h,2)}" rx="6" fill="url(#g1)"><title>${esc(x.l)}: ${rp(x.v)}</title></rect>${d.length<=12||i%5===0?`<text x="${X+bw*.32}" y="${H-8}" text-anchor="middle" font-size="11" fill="var(--mut)">${esc(x.l)}</text>`:''}`}).join('')}</svg>`
+        }
+
+        function donut(parts, mid) {
+            const T = parts.reduce((a, x) => a + x.v, 0) || 1,
+                R = 52,
+                L = 2 * Math.PI * R;
+            let o = 0;
+            return `<svg viewBox="0 0 140 140" width="150" role="img" aria-label="Status kamar"><circle cx="70" cy="70" r="${R}" fill="none" stroke="var(--ln)" stroke-width="16"/>${parts.map(x=>{const l=L*x.v/T,s=`<circle cx="70" cy="70" r="${R}" fill="none" stroke="${x.c}" stroke-width="16" stroke-dasharray="${l} ${L-l}" stroke-dashoffset="${-o}" transform="rotate(-90 70 70)"><title>${x.l}: ${x.v}</title></circle>`;o+=l;return s}).join('')}<text x="70" y="68" text-anchor="middle" font-size="22" font-weight="700" fill="var(--tx)">${mid}</text><text x="70" y="85" text-anchor="middle" font-size="10" fill="var(--mut)">okupansi</text></svg>`
+        }
+        const resForm = (k, x) => {
+            const B = !x || x.status === 'Booking';
+            return inp('tamu', 'Nama tamu', 'text', x?.tamu, 'maxlength="60"') + inp('hp', 'No. HP / WhatsApp', 'tel', hp(x?.hp), 'maxlength="20" pattern="[0-9+\\-\\s]{8,20}" title="Angka, 8-20 digit"') + (B ? sel('kamar', 'Kamar', k.map(y => [y.id, `${y.nama} - ${rp(y.harga)}`]), x?.kamar) + inp('checkin', 'Check-in', 'date', x?.checkin || today()) + inp('checkout', 'Check-out', 'date', x?.checkout) : '<p style="color:var(--mut);font-size:13px">Tamu sudah check-in: hanya data tamu yang dapat diubah.</p>')
+        };
+        const ROLES = [
+                ['staff', 'Staf'],
+                ['admin', 'Admin']
+            ],
+            PWF = inp('password', 'Password (min. 8, huruf & angka)', 'password', '', 'minlength="8" autocomplete="new-password"');
         /* ---- struk ---- */
         function struk(r) {
             const L = (a, b) => a.padEnd(14) + String(b),
@@ -938,53 +1294,96 @@
         /* ---- views ---- */
         const V = {
             async dash() {
-                const [d, r] = await Promise.all([api('dashboard'), api('resList')]), t = today();
-                const row = (x, a) => `<tr><td><b>${esc(x.tamu)}</b></td><td>${esc(x.kamar)}</td><td>${esc(x.checkin)} → ${esc(x.checkout)}</td><td>${tag(x.status)}</td></tr>`;
-                $('#m').innerHTML = `<div class="top"><h2>Halo, ${esc(S.user.nama)}</h2></div><div class="grid">${card('building','Total Kamar',d.total)+card('door-open','Tersedia',d.tersedia)+card('bed-double','Terisi',d.terisi,`<div class="bar"><i style="width:${d.okupansi}%"></i></div>`)+card('sparkles','Dibersihkan',d.dibersihkan)+card('wrench','Perbaikan',d.perbaikan)+card('log-in','Check-in Hari Ini',d.checkinHariIni)+card('log-out','Check-out Hari Ini',d.checkoutHariIni)+card('wallet','Pendapatan',rp(d.pendapatan))+card('clock','Piutang',rp(d.piutang))}</div>
-  <h3>Agenda Hari Ini</h3>${tbl(['Tamu','Kamar','Tanggal','Status'],r.filter(x=>(x.checkin===t&&x.status==='Booking')||(x.checkout===t&&x.status==='Check-in')).map(row).join(''))}`
+                const p = P(),
+                    [d, r] = await Promise.all([api('dashboard'), api('resList')]);
+                if (!p.ok()) return;
+                const mo = [...Array(6)].map((_, i) => {
+                        const x = new Date();
+                        x.setDate(1);
+                        x.setMonth(x.getMonth() - 5 + i);
+                        return x.toLocaleDateString('sv-SE').slice(0, 7)
+                    }),
+                    t = today(),
+                    data = mo.map(m => ({
+                        l: MON[+m.slice(5) - 1],
+                        v: r.filter(x => x.status !== 'Batal' && x.checkin.startsWith(m)).reduce((a, x) => a + Number(x.dibayar || 0), 0)
+                    })),
+                    parts = [
+                        ['Tersedia', d.tersedia, '#16a34a'],
+                        ['Terisi', d.terisi, '#2563eb'],
+                        ['Dibersihkan', d.dibersihkan, '#f59e0b'],
+                        ['Perbaikan', d.perbaikan, '#dc2626']
+                    ].map(([l, v, c]) => ({
+                        l,
+                        v,
+                        c
+                    }));
+                p(`<div class="hero"><div><h2>Halo, ${esc(S.user.nama)}</h2><p>${new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'})} · ${d.total} kamar</p></div><button class="btn" data-go="res">${ic('plus')}Reservasi Baru</button></div>
+  <div class="grid">${card('wallet','Pendapatan',rp(d.pendapatan),'#16a34a')+card('clock','Piutang',rp(d.piutang),'#d97706')+card('log-in','Check-in Hari Ini',d.checkinHariIni,'#2563eb')+card('log-out','Check-out Hari Ini',d.checkoutHariIni,'#7c3aed')}</div>
+  <div class="cols"><div class="card"><h3>Pendapatan 6 Bulan Terakhir</h3>${barChart(data)}</div><div class="card"><h3>Status Kamar</h3><div class="dn">${donut(parts,d.okupansi+'%')}<ul class="lg">${parts.map(x=>`<li><i style="background:${x.c}"></i>${x.l}<b>${x.v}</b></li>`).join('')}</ul></div></div></div>
+  <h3>Agenda Hari Ini</h3>` + tbl(['Tamu', 'Kamar', 'Tanggal', 'Status'], r.filter(x => (x.checkin === t && x.status === 'Booking') || (x.checkout === t && x.status === 'Check-in')).map(x => `<tr><td><b>${esc(x.tamu)}</b></td><td>${esc(x.kamar)}</td><td>${esc(x.checkin)} → ${esc(x.checkout)}</td><td>${tag(x.status)}</td></tr>`).join('')));
+                document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => go(b.dataset.go))
             },
             async kamar() {
-                const k = await api('roomList'),
-                    adm = S.user.role === 'admin',
+                const p = P(),
+                    k = await api('roomList');
+                if (!p.ok()) return;
+                const adm = S.user.role === 'admin',
                     st = ['Tersedia', 'Terisi', 'Dibersihkan', 'Perbaikan'],
-                    edit = r => modal(r ? 'Ubah Kamar' : 'Tambah Kamar', inp('id', 'Kode (mis. K301)', 'text', r?.id, r ? 'readonly' : '') + inp('nama', 'Nama', 'text', r?.nama) + inp('tipe', 'Tipe', 'text', r?.tipe) + inp('harga', 'Harga per malam', 'number', r?.harga, 'min="1"'), async o => {
+                    edit = r => modal(r ? 'Ubah Kamar' : 'Tambah Kamar', inp('id', 'Kode (huruf/angka, mis. K301)', 'text', r?.id, r ? 'readonly' : 'pattern="[A-Za-z0-9]{2,12}" maxlength="12"') + inp('nama', 'Nama', 'text', r?.nama, 'maxlength="40"') + inp('tipe', 'Tipe', 'text', r?.tipe, 'maxlength="30"') + inp('harga', 'Harga per malam (Rp)', 'number', r?.harga, 'min="1"'), async o => {
                         await api('roomSave', o);
                         V.kamar()
                     });
-                $('#m').innerHTML = `<div class="top"><h2>Status Kamar</h2>${adm?`<button class="btn" id="add">${ic('plus')}Kamar</button>`:''}</div><div class="rooms">${k.map(r=>`<div class="card room ${esc(r.status)}"><h3>${esc(r.nama)}</h3><p>${esc(r.tipe)} · ${rp(r.harga)}/malam</p><select data-id="${esc(r.id)}">${st.map(s=>`<option ${s===r.status?'selected':''}>${s}</option>`).join('')}</select>${adm?`<div style="margin-top:8px;display:flex;gap:6px">${btn('pencil','Ubah',`data-e="${esc(r.id)}"`,'g')}${btn('trash-2','Hapus',`data-x="${esc(r.id)}"`,'d')}</div>`:''}</div>`).join('')||'<p>Belum ada kamar</p>'}</div>`;
-                document.querySelectorAll('#m select').forEach(s => s.onchange = () => run(async () => {
-                    await api('roomStatus', {
-                        id: s.dataset.id,
-                        status: s.value
-                    });
-                    V.kamar()
-                }, 'Status diperbarui'));
-                if (adm) {
-                    $('#add').onclick = () => edit();
-                    document.querySelectorAll('[data-e]').forEach(b => b.onclick = () => edit(k.find(x => x.id === b.dataset.e)));
-                    document.querySelectorAll('[data-x]').forEach(b => b.onclick = () => {
-                        if (confirm('Hapus kamar ' + b.dataset.x + '?')) run(async () => {
-                            await api('roomDelete', {
-                                id: b.dataset.x
-                            });
-                            V.kamar()
-                        }, 'Kamar dihapus')
-                    })
-                }
+                p(`<div class="top"><h2>Kamar</h2><div><input id="q" type="search" placeholder="Cari kamar…" value="${esc(ST.kq)}"><select id="fs"><option value="">Semua status</option>${st.map(s=>`<option ${s===ST.kf?'selected':''}>${s}</option>`).join('')}</select>${adm?`<button class="btn" id="add">${ic('plus')}Kamar</button>`:''}</div></div><div class="rooms" id="kl"></div>`);
+                const draw = () => {
+                    ST.kq = $('#q').value;
+                    ST.kf = $('#fs').value;
+                    const l = k.filter(r => (!ST.kf || r.status === ST.kf) && (r.nama + r.tipe + r.id).toLowerCase().includes(ST.kq.toLowerCase()));
+                    $('#kl').innerHTML = l.map(r => `<div class="card room ${esc(r.status)}"><h3>${esc(r.nama)}</h3><p>${esc(r.tipe)} · ${rp(r.harga)}/malam</p><select data-id="${esc(r.id)}" aria-label="Status ${esc(r.nama)}">${st.map(s=>`<option ${s===r.status?'selected':''}>${s}</option>`).join('')}</select>${adm?`<div style="margin-top:8px;display:flex;gap:6px">${btn('pencil','Ubah',`data-e="${esc(r.id)}"`,'g')}${btn('trash-2','Hapus',`data-x="${esc(r.id)}"`,'d')}</div>`:''}</div>`).join('') || '<div class="empty">Tidak ada kamar</div>'
+                };
+                $('#q').oninput = draw;
+                $('#fs').onchange = draw;
+                draw();
+                $('#kl').onchange = e => {
+                    const s = e.target.closest('select');
+                    if (s) run(async () => {
+                        await api('roomStatus', {
+                            id: s.dataset.id,
+                            status: s.value
+                        });
+                        V.kamar()
+                    }, 'Status diperbarui')
+                };
+                $('#kl').onclick = e => {
+                    const b = e.target.closest('[data-e],[data-x]');
+                    if (!b) return;
+                    if (b.dataset.e) return edit(k.find(x => x.id === b.dataset.e));
+                    if (confirm('Hapus kamar ' + b.dataset.x + '?')) run(async () => {
+                        await api('roomDelete', {
+                            id: b.dataset.x
+                        });
+                        V.kamar()
+                    }, 'Kamar dihapus')
+                };
+                if (adm) $('#add').onclick = () => edit()
             },
             async res() {
-                const [r, k] = await Promise.all([api('resList'), api('roomList')]);
+                const p = P(),
+                    [r, k] = await Promise.all([api('resList'), api('roomList')]);
+                if (!p.ok()) return;
                 RES = r;
-                $('#m').innerHTML = `<div class="top"><h2>Reservasi</h2><div><input id="q" placeholder="Cari tamu / kamar…" type="search"><select id="fs"><option value="">Semua status</option>${['Booking','Check-in','Selesai','Batal'].map(s=>`<option>${s}</option>`).join('')}</select><button class="btn" id="add">${ic('plus')}Reservasi</button></div></div><div id="rl"></div>`;
+                p(`<div class="top"><h2>Reservasi</h2><div><input id="q" type="search" placeholder="Cari tamu / kamar…" value="${esc(ST.q)}"><select id="fs"><option value="">Semua status</option>${['Booking','Check-in','Selesai','Batal'].map(s=>`<option ${s===ST.fs?'selected':''}>${s}</option>`).join('')}</select><button class="btn" id="add">${ic('plus')}Reservasi</button></div></div><div id="rl"></div>`);
                 const draw = () => {
-                    const q = $('#q').value.toLowerCase(),
-                        f = $('#fs').value,
-                        l = RES.filter(x => (!f || x.status === f) && (x.tamu + x.kamar + x.id).toLowerCase().includes(q));
-                    $('#rl').innerHTML = tbl(['Tamu', 'Kamar', 'Tanggal', 'Total / Dibayar', 'Status', 'Aksi'], l.map(x => {
+                    ST.q = $('#q').value;
+                    ST.fs = $('#fs').value;
+                    const q = ST.q.toLowerCase(),
+                        l = RES.filter(x => (!ST.fs || x.status === ST.fs) && (x.tamu + x.kamar + x.id).toLowerCase().includes(q));
+                    $('#rl').innerHTML = tbl(['Tamu', 'Kamar', 'Tanggal', 'Total', 'Status', 'Aksi'], l.map(x => {
                         const sisa = x.total - x.dibayar,
                             B = x.status === 'Booking',
-                            C = x.status === 'Check-in';
-                        return `<tr><td><b>${esc(x.tamu)}</b><br><small>${esc(hp(x.hp))}</small></td><td>${esc(x.kamar)}</td><td>${esc(x.checkin)} → ${esc(x.checkout)}</td><td>${rp(x.total)}<br><small>${sisa<=0?'Lunas':'Dibayar '+rp(x.dibayar)}</small></td><td>${tag(x.status)}</td><td class="a">${(B||C)&&sisa>0?btn('wallet','Catat pembayaran',`data-a="pay" data-id="${esc(x.id)}"`,'k'):''} ${B?btn('log-in','Check-in',`data-a="checkin" data-id="${esc(x.id)}"`):''}${C?btn('log-out','Check-out',`data-a="checkout" data-id="${esc(x.id)}"`):''} ${x.status!=='Batal'?btn('receipt','Kwitansi',`data-a="rc" data-id="${esc(x.id)}"`,'g'):''} ${B?btn('ban','Batalkan',`data-a="batal" data-id="${esc(x.id)}"`,'d'):''}</td></tr>`
+                            C2 = x.status === 'Check-in',
+                            id = `data-id="${esc(x.id)}"`;
+                        return `<tr><td><b>${esc(x.tamu)}</b><br><small>${esc(hp(x.hp))}</small></td><td>${esc(x.kamar)}</td><td>${esc(x.checkin)} → ${esc(x.checkout)}</td><td>${rp(x.total)}<br><small>${sisa<=0?'Lunas':'Dibayar '+rp(x.dibayar)}</small></td><td>${tag(x.status)}</td><td class="a">${(B||C2)&&sisa>0?btn('wallet','Catat pembayaran',`data-a="pay" ${id}`,'k'):''} ${B?btn('log-in','Check-in',`data-a="checkin" ${id}`):''}${C2?btn('log-out','Check-out',`data-a="checkout" ${id}`):''} ${B||C2?btn('pencil','Ubah',`data-a="edit" ${id}`,'g'):''} ${x.status!=='Batal'?btn('receipt','Kwitansi',`data-a="rc" ${id}`,'g'):''} ${B?btn('ban','Batalkan',`data-a="batal" ${id}`,'d'):''}</td></tr>`
                     }).join(''))
                 };
                 $('#rl').onclick = e => {
@@ -992,7 +1391,15 @@
                     if (!b) return;
                     const x = RES.find(y => y.id === b.dataset.id),
                         a = b.dataset.a;
+                    if (!x) return toast('Data tidak ditemukan, muat ulang halaman');
                     if (a === 'rc') return kwitansi(x);
+                    if (a === 'edit') return modal('Ubah Reservasi', resForm(k, x), async o => {
+                        await api('resEdit', {
+                            id: x.id,
+                            ...o
+                        });
+                        V.res()
+                    });
                     if (a === 'pay') return modal('Catat Pembayaran', `<p>${esc(x.tamu)} · sisa <b>${rp(x.total-x.dibayar)}</b></p>` + inp('jumlah', 'Jumlah (Rp)', 'number', x.total - x.dibayar, `min="1" max="${x.total-x.dibayar}"`) + sel('metode', 'Metode', ['Tunai', 'Transfer', 'QRIS'].map(m => [m, m])), async o => {
                         await api('pay', {
                             id: x.id,
@@ -1012,21 +1419,29 @@
                 $('#q').oninput = draw;
                 $('#fs').onchange = draw;
                 draw();
-                $('#add').onclick = () => modal('Reservasi Baru', inp('tamu', 'Nama tamu', 'text', '', 'maxlength="60"') + inp('hp', 'No. HP / WhatsApp', 'tel', '', 'maxlength="20"') + sel('kamar', 'Kamar', k.map(x => [x.id, `${x.nama} - ${rp(x.harga)}`])) + inp('checkin', 'Check-in', 'date', today()) + inp('checkout', 'Check-out', 'date'), async o => {
+                $('#add').onclick = () => k.length ? modal('Reservasi Baru', resForm(k), async o => {
                     await api('resSave', o);
                     V.res()
-                })
+                }) : toast('Tambahkan kamar terlebih dahulu')
             },
             async lap() {
-                const r = await api('resList'),
-                    mo = today().slice(0, 7);
-                $('#m').innerHTML = `<div class="top"><h2>Laporan</h2><div><input type="month" id="mo" value="${mo}"><button class="btn g" id="csv">${ic('download')}CSV</button></div></div><div id="lr"></div>`;
+                const p = P(),
+                    r = await api('resList');
+                if (!p.ok()) return;
+                const mo = ST.mo || today().slice(0, 7);
                 let l = [];
+                p(`<div class="top"><h2>Laporan</h2><div><input type="month" id="mo" value="${mo}"><button class="btn g" id="csv">${ic('download')}CSV</button></div></div><div id="lr"></div>`);
                 const draw = () => {
-                    l = r.filter(x => x.checkin.startsWith($('#mo').value) && x.status !== 'Batal');
+                    ST.mo = $('#mo').value || mo;
+                    l = r.filter(x => x.checkin.startsWith(ST.mo) && x.status !== 'Batal');
                     const T = l.reduce((a, x) => a + Number(x.total), 0),
-                        P = l.reduce((a, x) => a + Number(x.dibayar), 0);
-                    $('#lr').innerHTML = `<div class="grid">${card('calendar-check','Reservasi',l.length)+card('receipt','Total Tagihan',rp(T))+card('wallet','Diterima',rp(P))+card('clock','Piutang',rp(T-P))}</div>` + tbl(['ID', 'Tamu', 'Kamar', 'Check-in', 'Total', 'Dibayar', 'Status'], l.map(x => `<tr><td>${esc(x.id)}</td><td>${esc(x.tamu)}</td><td>${esc(x.kamar)}</td><td>${esc(x.checkin)}</td><td>${rp(x.total)}</td><td>${rp(x.dibayar)}</td><td>${tag(x.status)}</td></tr>`).join(''))
+                        Pd = l.reduce((a, x) => a + Number(x.dibayar), 0),
+                        n = new Date(ST.mo.slice(0, 4), ST.mo.slice(5), 0).getDate(),
+                        days = [...Array(n)].map((_, i) => ({
+                            l: String(i + 1),
+                            v: l.filter(x => +x.checkin.slice(8) === i + 1).reduce((a, x) => a + Number(x.dibayar), 0)
+                        }));
+                    $('#lr').innerHTML = `<div class="grid">${card('calendar-check','Reservasi',l.length)+card('receipt','Total Tagihan',rp(T),'#7c3aed')+card('wallet','Diterima',rp(Pd),'#16a34a')+card('clock','Piutang',rp(T-Pd),'#d97706')}</div><div class="card" style="margin-bottom:16px"><h3>Pendapatan Harian</h3>${barChart(days)}</div>` + tbl(['ID', 'Tamu', 'Kamar', 'Check-in', 'Total', 'Dibayar', 'Status'], l.map(x => `<tr><td>${esc(x.id)}</td><td>${esc(x.tamu)}</td><td>${esc(x.kamar)}</td><td>${esc(x.checkin)}</td><td>${rp(x.total)}</td><td>${rp(x.dibayar)}</td><td>${tag(x.status)}</td></tr>`).join(''))
                 };
                 $('#mo').onchange = draw;
                 draw();
@@ -1039,27 +1454,24 @@
                     a.href = URL.createObjectURL(new Blob(['\ufeff' + rows.map(z => z.map(q).join(',')).join('\n')], {
                         type: 'text/csv'
                     }));
-                    a.download = 'laporan-' + $('#mo').value + '.csv';
+                    a.download = 'laporan-' + ST.mo + '.csv';
                     a.click();
-                    URL.revokeObjectURL(a.href)
+                    setTimeout(() => URL.revokeObjectURL(a.href), 999)
                 }
             },
             async user() {
-                const u = await api('userList');
-                const pwf = inp('password', 'Password (min. 8, huruf & angka)', 'password', '', 'minlength="8" autocomplete="new-password"'),
-                    roles = [
-                        ['staff', 'Staf'],
-                        ['admin', 'Admin']
-                    ];
-                $('#m').innerHTML = `<div class="top"><h2>Pengguna</h2><button class="btn" id="add">${ic('plus')}Pengguna</button></div>` +
-                    tbl(['Username', 'Nama', 'Peran', 'Status', 'Aksi'], u.map(x => `<tr><td>${esc(x.username)}</td><td>${esc(x.nama)}</td><td>${esc(x.role)}</td><td>${tag(x.aktif?'Aktif':'Nonaktif')}</td><td class="a">${btn('pencil','Ubah',`data-t="${esc(x.username)}"`,'g')} ${btn('key-round','Reset password',`data-reset="${esc(x.username)}"`,'g')}</td></tr>`).join(''));
-                $('#add').onclick = () => modal('Pengguna Baru', inp('username', 'Username') + inp('nama', 'Nama lengkap') + sel('role', 'Peran', roles) + pwf, async o => {
+                const p = P(),
+                    u = await api('userList');
+                if (!p.ok()) return;
+                p(`<div class="top"><h2>Pengguna</h2><button class="btn" id="add">${ic('plus')}Pengguna</button></div>` +
+                    tbl(['Username', 'Nama', 'Peran', 'Status', 'Aksi'], u.map(x => `<tr><td>${esc(x.username)}</td><td>${esc(x.nama)}</td><td>${esc(x.role)}</td><td>${tag(x.aktif?'Aktif':'Nonaktif')}</td><td class="a">${btn('pencil','Ubah',`data-t="${esc(x.username)}"`,'g')} ${btn('key-round','Reset password',`data-reset="${esc(x.username)}"`,'g')}</td></tr>`).join('')));
+                $('#add').onclick = () => modal('Pengguna Baru', inp('username', 'Username (huruf kecil, angka, _ .)', 'text', '', 'pattern="[a-z0-9_.]{3,30}" maxlength="30"') + inp('nama', 'Nama lengkap', 'text', '', 'maxlength="60"') + sel('role', 'Peran', ROLES) + PWF, async o => {
                     await api('userSave', o);
                     V.user()
                 });
                 document.querySelectorAll('[data-t]').forEach(b => {
                     const x = u.find(y => y.username === b.dataset.t);
-                    b.onclick = () => modal('Ubah ' + x.username, inp('nama', 'Nama', 'text', x.nama) + sel('role', 'Peran', roles, x.role) + sel('aktif', 'Status', [
+                    b.onclick = () => modal('Ubah ' + x.username, inp('nama', 'Nama', 'text', x.nama, 'maxlength="60"') + sel('role', 'Peran', ROLES, x.role) + sel('aktif', 'Status', [
                         ['true', 'Aktif'],
                         ['false', 'Nonaktif']
                     ], String(x.aktif)), async o => {
@@ -1072,7 +1484,7 @@
                         V.user()
                     })
                 });
-                document.querySelectorAll('[data-reset]').forEach(b => b.onclick = () => modal('Reset password ' + b.dataset.reset, inp('password', 'Password baru', 'password', '', 'minlength="8" autocomplete="new-password"'), async o => {
+                document.querySelectorAll('[data-reset]').forEach(b => b.onclick = () => modal('Reset password ' + b.dataset.reset, inp('password', 'Password baru (min. 8, huruf & angka)', 'password', '', 'minlength="8" autocomplete="new-password"'), async o => {
                     await api('userReset', {
                         username: b.dataset.reset,
                         password: o.password
@@ -1081,9 +1493,11 @@
                 }))
             },
             async set() {
-                const [c, l] = await Promise.all([api('settingsGet'), api('logList')]);
-                $('#m').innerHTML = `<div class="top"><h2>Pengaturan</h2></div><form class="card" id="sf" style="max-width:480px;margin-bottom:18px"><b style="font-size:16px">Identitas Properti (tampil di kwitansi)</b>${inp('nama','Nama','text',c.nama)+inp('alamat','Alamat','text',c.alamat)+inp('telp','Telepon','text',c.telp)+inp('footer','Catatan kaki','text',c.footer)}<button class="btn" style="margin-top:12px">${ic('save')}Simpan</button></form>
-  <h3>Log Aktivitas</h3>` + tbl(['Waktu', 'Pengguna', 'Aksi', 'Detail'], l.map(x => `<tr><td>${esc(String(x.waktu).replace('T',' ').slice(0,16))}</td><td>${esc(x.user)}</td><td>${esc(x.aksi)}</td><td>${esc(x.detail)}</td></tr>`).join(''));
+                const p = P(),
+                    [c, l] = await Promise.all([api('settingsGet'), api('logList')]);
+                if (!p.ok()) return;
+                p(`<div class="top"><h2>Pengaturan</h2></div><form class="card" id="sf" style="max-width:480px;margin-bottom:18px"><h3>Identitas Properti (tampil di kwitansi)</h3>${inp('nama','Nama','text',c.nama,'maxlength="60"')+inp('alamat','Alamat','text',c.alamat,'maxlength="120"')+inp('telp','Telepon','text',c.telp,'maxlength="30"')+inp('footer','Catatan kaki','text',c.footer,'maxlength="120"')}<button class="btn" style="margin-top:14px">${ic('save')}Simpan</button></form>
+  <h3>Log Aktivitas</h3>` + tbl(['Waktu', 'Pengguna', 'Aksi', 'Detail'], l.map(x => `<tr><td>${esc(String(x.waktu).slice(0,16))}</td><td>${esc(x.user)}</td><td>${esc(x.aksi)}</td><td>${esc(x.detail)}</td></tr>`).join('')));
                 $('#sf').onsubmit = e => {
                     e.preventDefault();
                     run(async () => {
@@ -1097,6 +1511,24 @@
         $('#pw').onclick = () => modal('Ganti Password', inp('lama', 'Password lama', 'password', '', 'autocomplete="current-password"') + inp('baru', 'Password baru (min. 8, huruf & angka)', 'password', '', 'minlength="8" autocomplete="new-password"'), async o => {
             await api('changePassword', o);
             toast('Password diganti')
+        });
+        const setTh = t => {
+            document.documentElement.dataset.t = t;
+            $('#th').innerHTML = ic(t === 'dark' ? 'sun' : 'moon');
+            try {
+                localStorage.setItem('th', t)
+            } catch (e) {}
+        };
+        $('#th').onclick = () => setTh(document.documentElement.dataset.t === 'dark' ? 'light' : 'dark');
+        try {
+            setTh(localStorage.getItem('th') || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light'))
+        } catch (e) {}
+        addEventListener('error', e => {
+            if (e.message) toast('Terjadi kesalahan: ' + e.message)
+        });
+        addEventListener('unhandledrejection', e => {
+            e.preventDefault();
+            toast((e.reason && e.reason.message) || 'Terjadi kesalahan tak terduga')
         });
         show();
     </script>
